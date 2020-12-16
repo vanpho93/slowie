@@ -1,16 +1,35 @@
 import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
 
-const dishes = [
-  { id: 'dish_1', name: 'Com tam' },
-  { id: 'dish_2', name: 'Pho' },
+const options = [
+  { id: 'option_1', name: 'Nuoc mam' },
+  { id: 'option_2', name: 'Op la' },
+  { id: 'option_3', name: 'Hop giay' },
 ]
+
+const dishes = [
+  { id: 'dish_1', name: 'Com tam', optionIds: ['option_1'] },
+  { id: 'dish_2', name: 'Pho', optionIds: ['option_2', 'option_3'] },
+]
+
+const option = new graphql.GraphQLObjectType({
+  name: 'Option',
+  fields: {
+    id: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+  }
+})
 
 const dish = new graphql.GraphQLObjectType({
   name: 'Dish',
   fields: {
     id: { type: graphql.GraphQLString },
     name: { type: graphql.GraphQLString },
+    optionIds: { type: graphql.GraphQLList(graphql.GraphQLString) },
+    options: {
+      type: graphql.GraphQLList(option),
+      resolve: (parent) => options.filter(option => parent.optionIds.includes(option.id)),
+    },
   }
 })
 
