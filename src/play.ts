@@ -1,6 +1,11 @@
 import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
 
+const dishes = [
+  { id: 'dish_1', name: 'Com tam' },
+  { id: 'dish_2', name: 'Pho' },
+]
+
 const dish = new graphql.GraphQLObjectType({
   name: 'Dish',
   fields: {
@@ -14,7 +19,14 @@ const query = new graphql.GraphQLObjectType({
   fields: {
     dishes: {
       type: graphql.GraphQLList(dish),
-      resolve: () => [{ id: 'dish_1', name: 'Com tam' }, { id: 'dish_2', name: 'Pho' }]
+      resolve: () => dishes,
+    },
+    dish: {
+      type: dish,
+      args: {
+        id: { type: graphql.GraphQLString }
+      },
+      resolve: (_, { id }) => dishes.find(dish => dish.id === id),
     }
   }
 })
