@@ -1,5 +1,3 @@
-import * as express from 'express'
-
 export interface ISlowieInput {
   modelDirectory: string
   port?: number | string
@@ -7,15 +5,13 @@ export interface ISlowieInput {
 }
 
 export class Slowie {
-  public app = express()
-
   static init(input: ISlowieInput) {
     const instance = new Slowie(input)
     return instance
   }
 
   private start() {
-    this.app.listen(this.input.port, this.input.onReady)
+    if(this.input.onReady) this.input.onReady()
   }
 
   constructor(private input: ISlowieInput) {
@@ -23,11 +19,8 @@ export class Slowie {
   }
 
   private load() {
-    const routes = this.getRoutes()
-    for (const route of routes) this.app.use(route)
-  }
-
-  private getRoutes(): express.Router[] {
-    return []
+    console.log('Slowie is loading')
+    console.log('Slowie loaded')
+    this.start()
   }
 }
