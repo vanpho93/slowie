@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { ApolloServer } from 'apollo-server'
+import { ApolloServer, ValidationError } from 'apollo-server'
 import { Document } from 'mongoose'
 import { mongoose } from './mongoose'
 
@@ -92,17 +92,25 @@ const mutation = new graphql.GraphQLObjectType({
     removeDish: {
       type: dish,
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: async (_, { _id }) => await Dish.findByIdAndDelete(_id),
+      resolve: async (_, { _id }) => {
+        const removed = await Dish.findByIdAndDelete(_id)
+        if (_.isNil(removed)) throw new ValidationError('DISH_NOT_FOUND')
+        return removed
+      },
     },
     addOption: {
       type: option,
       args: { input: { type: optionInput } },
-      resolve: (_, { input: { _id, name } }) => Option.create({ _id, name }),
+      resolve: (__, { input: { _id, name } }) => Option.create({ _id, name }),
     },
     removeOption: {
       type: dish,
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: async (_, { _id }) => await Option.findByIdAndDelete(_id),
+      resolve: async (__, { _id }) => {
+        const removed = await Option.findByIdAndDelete(_id)
+        if (_.isNil(removed)) throw new ValidationError('OPTION_NOT_FOUND')
+        return removed
+      },
     },
   }
 })
