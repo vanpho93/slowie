@@ -64,6 +64,39 @@ const query = new graphql.GraphQLObjectType({
   }
 })
 
+const dishInput = new graphql.GraphQLInputObjectType({
+  name: 'DishInput',
+  fields: {
+    _id: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+    optionIds: { type: graphql.GraphQLList(graphql.GraphQLString) },
+  }
+})
+
+const optionInput = new graphql.GraphQLInputObjectType({
+  name: 'OptionInput',
+  fields: {
+    _id: { type: graphql.GraphQLString },
+    name: { type: graphql.GraphQLString },
+  }
+})
+
+const mutation = new graphql.GraphQLObjectType({
+  name: 'Mutation',
+  fields: {
+    addDish: {
+      type: dish,
+      args: { input: { type: dishInput } },
+      resolve: (_, { input: { _id, name, optionIds } }) => Dish.create({ _id, name, optionIds }),
+    },
+    addOption: {
+      type: option,
+      args: { input: { type: optionInput } },
+      resolve: (_, { input: { _id, name } }) => Option.create({ _id, name }),
+    }
+  }
+})
+
 async function init() {
   const exists = !_.isNil(await Dish.findOne({}))
   if (exists) return
@@ -78,7 +111,7 @@ async function init() {
   ])
 }
 
-const schema = new graphql.GraphQLSchema({ query })
+const schema = new graphql.GraphQLSchema({ query, mutation })
 
 const server = new ApolloServer({ schema })
 
