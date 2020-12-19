@@ -89,11 +89,21 @@ const mutation = new graphql.GraphQLObjectType({
       args: { input: { type: dishInput } },
       resolve: (_, { input: { _id, name, optionIds } }) => Dish.create({ _id, name, optionIds }),
     },
+    removeDish: {
+      type: dish,
+      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
+      resolve: async (_, { _id }) => await Dish.findByIdAndDelete(_id),
+    },
     addOption: {
       type: option,
       args: { input: { type: optionInput } },
       resolve: (_, { input: { _id, name } }) => Option.create({ _id, name }),
-    }
+    },
+    removeOption: {
+      type: dish,
+      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
+      resolve: async (_, { _id }) => await Option.findByIdAndDelete(_id),
+    },
   }
 })
 
