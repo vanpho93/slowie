@@ -1,6 +1,6 @@
 import { customAlphabet } from 'nanoid'
 import * as _ from 'lodash'
-import { ApolloServer, ValidationError } from 'apollo-server'
+import { ValidationError } from 'apollo-server'
 import * as graphql from 'graphql'
 import { Document } from 'mongoose'
 import { mongoose } from '../mongoose'
