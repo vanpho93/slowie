@@ -1,3 +1,4 @@
+import { customAlphabet } from 'nanoid'
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { ApolloServer, ValidationError } from 'apollo-server'
@@ -15,14 +16,16 @@ interface IOption {
   name: string
 }
 
+const nanoid = customAlphabet('1234567890abcdef', 16)
+
 export const Dish = mongoose.model<IDish & Document>('Dish', new mongoose.Schema({
-  _id: String,
+  _id: { type: String, default: nanoid },
   name: String,
   optionIds: [String],
 }))
 
 export const Option = mongoose.model<IOption & Document>('Option', new mongoose.Schema({
-  _id: String,
+  _id: { type: String, default: nanoid },
   name: String,
 }))
 
@@ -84,10 +87,10 @@ const optionInput = new graphql.GraphQLInputObjectType({
 const mutation = new graphql.GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    addDish: {
+    createDish: {
       type: dish,
       args: { input: { type: dishInput } },
-      resolve: (__, { input: { _id, name, optionIds } }) => Dish.create({ _id, name, optionIds }),
+      resolve: (__, { input: { name, optionIds } }) => Dish.create({ name, optionIds }),
     },
     updateDish: {
       type: dish,
@@ -107,10 +110,10 @@ const mutation = new graphql.GraphQLObjectType({
         return removed
       },
     },
-    addOption: {
+    createOption: {
       type: option,
       args: { input: { type: optionInput } },
-      resolve: (__, { input: { _id, name } }) => Option.create({ _id, name }),
+      resolve: (__, { input: { name } }) => Option.create({ name }),
     },
     updateOption: {
       type: dish,
