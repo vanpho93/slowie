@@ -87,12 +87,21 @@ const mutation = new graphql.GraphQLObjectType({
     addDish: {
       type: dish,
       args: { input: { type: dishInput } },
-      resolve: (_, { input: { _id, name, optionIds } }) => Dish.create({ _id, name, optionIds }),
+      resolve: (__, { input: { _id, name, optionIds } }) => Dish.create({ _id, name, optionIds }),
+    },
+    updateDish: {
+      type: dish,
+      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) }, input: { type: dishInput } },
+      resolve: async (__, { _id, input: { name, optionIds } }) => {
+        const updated = await Dish.findByIdAndUpdate(_id, { name, optionIds }, { new: true })
+        if (_.isNil(updated)) throw new ValidationError('DISH_NOT_FOUND')
+        return updated
+      },
     },
     removeDish: {
       type: dish,
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: async (_, { _id }) => {
+      resolve: async (__, { _id }) => {
         const removed = await Dish.findByIdAndDelete(_id)
         if (_.isNil(removed)) throw new ValidationError('DISH_NOT_FOUND')
         return removed
@@ -102,6 +111,15 @@ const mutation = new graphql.GraphQLObjectType({
       type: option,
       args: { input: { type: optionInput } },
       resolve: (__, { input: { _id, name } }) => Option.create({ _id, name }),
+    },
+    updateOption: {
+      type: dish,
+      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) }, input: { type: optionInput } },
+      resolve: async (__, { _id, input: { name } }) => {
+        const updated = await Option.findByIdAndUpdate(_id, { name }, { new: true })
+        if (_.isNil(updated)) throw new ValidationError('DISH_NOT_FOUND')
+        return updated
+      },
     },
     removeOption: {
       type: dish,
