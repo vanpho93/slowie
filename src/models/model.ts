@@ -11,5 +11,12 @@ interface IModel<T> {
 }
 
 export class ModelBuilder<T> {
+  private name: string = ''
+
+  setName(name: string) {
+    this.name = name
+    return this
+  }
+
   build(): IModel<T> { return {} }
 }
