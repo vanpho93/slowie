@@ -1,10 +1,14 @@
-import { Schema } from 'mongoose'
+import * as graphql from 'graphql'
+import { SchemaDefinition } from 'mongoose'
 
 export interface IField {
-  name: string
+  graphql: { type: graphql.GraphQLScalarType }
+  db: SchemaDefinition
 }
 
 export interface IModel {
   name: string
-  fields: Schema[]
+  schema: ISchema
 }
+
+export type ISchema = { [key: string]: IField /* | IFieldDefinition */ } 
