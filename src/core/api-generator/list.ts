@@ -1,3 +1,4 @@
+import * as graphql from 'graphql'
 import * as _ from 'lodash'
 import { EApiType } from '../../core/metadata'
 import { BaseApiGenerator } from './metadata'
@@ -9,7 +10,7 @@ export class ListApiGenerator<T> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getType(),
+      type: graphql.GraphQLList(this.getType()),
       resolve: () => this.dbModel.find({}),
     }
   }

@@ -7,7 +7,7 @@ import { EApiType } from '../../core/metadata'
 export class RemoveApiGenerator<T> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
 
-  getKey() { return `update${this.model.name}` }
+  getKey() { return `remove${this.model.name}` }
 
   getApi() {
     return {
