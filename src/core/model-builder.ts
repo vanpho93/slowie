@@ -71,6 +71,13 @@ export class ModelBuilder<T> {
       },
     }
 
-    return { get, list, remove, update, create }
+    return {
+      collection: this.model.name,
+      get,
+      list,
+      remove,
+      update,
+      create,
+    }
   }
 }

@@ -1,26 +1,22 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
-import { dishQuery, dishes, createDish, removeDish, updateDish } from './models/dish'
-import { createOption, removeOption, updateOption } from './models/option'
+import { apis } from './models/user'
 
 const query = new graphql.GraphQLObjectType({
   name: 'Query',
   fields: {
-    dishes,
-    dish: dishQuery,
+    [`get${apis.collection}`]: apis.get,
+    [`get${apis.collection}s`]: apis.list,
   }
 })
 
 const mutation = new graphql.GraphQLObjectType({
   name: 'Mutation',
   fields: {
-    createDish,
-    removeDish,
-    updateDish,
-    createOption,
-    removeOption,
-    updateOption,
+    [`create${apis.collection}`]: apis.create,
+    [`update${apis.collection}`]: apis.update,
+    [`remove${apis.collection}`]: apis.remove,
   }
 })
 
