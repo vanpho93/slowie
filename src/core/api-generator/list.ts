@@ -1,10 +1,11 @@
 import * as _ from 'lodash'
-import { BaseApiGenerator, EApiType } from './metadata'
+import { EApiType } from '../../core/metadata'
+import { BaseApiGenerator } from './metadata'
 
 export class ListApiGenerator<T> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
 
-  getKey() { return `get${this.dbModel.collection}s` }
+  getKey() { return `get${this.model.name}s` }
 
   getApi() {
     return {

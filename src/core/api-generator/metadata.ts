@@ -2,12 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { GraphQLFieldConfig, GraphQLFieldConfigMap } from 'graphql'
 import { Document, Model } from 'mongoose'
-import { IModel } from '../../core/metadata'
-
-export enum EApiType {
-  QUERY = 'QUERY',
-  MUTATION = 'MUTATION',
-}
+import { EApiType, IModel } from '../../core/metadata'
 
 export interface IApiGenerator {
   generate(): GraphQLFieldConfigMap<any, any>
@@ -30,11 +25,17 @@ export abstract class BaseApiGenerator<T> implements IApiGenerator {
     return { [this.getKey()]: this.getApi() }
   }
 
-  getType() {
-    return new graphql.GraphQLObjectType({
-      name: this.model.name,
-      fields: this.getFields(),
-    })
+  static _types = {}
+
+  getType(): graphql.GraphQLObjectType {
+    const cached = BaseApiGenerator._types[this.model.name]
+    if (_.isNil(cached)) {
+      BaseApiGenerator._types[this.model.name] = new graphql.GraphQLObjectType({
+        name: this.model.name,
+        fields: this.getFields(),
+      })
+    }
+    return BaseApiGenerator._types[this.model.name]
   }
 
   abstract getKey(): string

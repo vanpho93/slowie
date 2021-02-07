@@ -1,12 +1,13 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { BaseApiGenerator, EApiType } from './metadata'
+import { BaseApiGenerator } from './metadata'
 import { ValidationError } from 'apollo-server'
+import { EApiType } from '../../core/metadata'
 
-export class UpdateApiGenerator<T> extends BaseApiGenerator<T> {
+export class RemoveApiGenerator<T> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
 
-  getKey() { return `update${this.dbModel.collection}` }
+  getKey() { return `update${this.model.name}` }
 
   getApi() {
     return {

@@ -28,7 +28,7 @@ const userModel: IModel = {
 
 interface IUser {}
 
-const builder = new ModelBuilder<IUser>(userModel)
+export const builder = new ModelBuilder<IUser>(userModel)
 
 export const User = builder.getDbModel()
-export const apis = builder.getGraphqlModel()
+export const apis = builder.getGraphqlApis()

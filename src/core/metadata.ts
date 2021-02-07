@@ -12,3 +12,8 @@ export interface IModel {
 }
 
 export type ISchema = { [key: string]: IField /* | IFieldDefinition */ } 
+
+export enum EApiType {
+  QUERY = 'QUERY',
+  MUTATION = 'MUTATION',
+}

@@ -1,23 +1,27 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
-import { apis } from './models/user'
+import { apis as userApis } from './models/user'
+import { EApiType } from './core/metadata'
+
+const apis = [
+  ...userApis,
+]
+
+const getFieldsByApiType = (type: EApiType) => _.chain(apis)
+  .filter({ type })
+  .map(generator => generator.generate())
+  .reduce(_.merge)
+  .value()
 
 const query = new graphql.GraphQLObjectType({
   name: 'Query',
-  fields: {
-    [`get${apis.collection}`]: apis.get,
-    [`get${apis.collection}s`]: apis.list,
-  }
+  fields: getFieldsByApiType(EApiType.QUERY)
 })
 
 const mutation = new graphql.GraphQLObjectType({
   name: 'Mutation',
-  fields: {
-    [`create${apis.collection}`]: apis.create,
-    [`update${apis.collection}`]: apis.update,
-    [`remove${apis.collection}`]: apis.remove,
-  }
+  fields: getFieldsByApiType(EApiType.MUTATION)
 })
 
 const schema = new graphql.GraphQLSchema({ query, mutation })

@@ -1,12 +1,13 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { ValidationError } from 'apollo-server'
-import { BaseApiGenerator, EApiType } from './metadata'
+import { EApiType } from '../../core/metadata'
+import { BaseApiGenerator } from './metadata'
 
 export class GetByIdApiGenerator<T> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
 
-  getKey() { return `get${this.dbModel.collection}` }
+  getKey() { return `get${this.model.name}` }
 
   getApi() {
     return {
