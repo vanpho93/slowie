@@ -1,5 +1,5 @@
 import * as _ from 'lodash'
-import { Document } from 'mongoose'
+import { Document, Model } from 'mongoose'
 import { IModel } from './metadata'
 import { mongoose } from '../mongoose'
 import * as graphql from 'graphql'
@@ -8,12 +8,16 @@ import { ValidationError } from 'apollo-server'
 export class ModelBuilder<T> {
   constructor(private model: IModel) { }
   
-  public getDbModel() {
-    const schemaDefinition = _.mapValues(this.model.schema, 'db')
-    return mongoose.model<T & Document>(
-      this.model.name,
-      new mongoose.Schema(schemaDefinition)
-    )
+  private _dbModel: any
+  public getDbModel(): Model<T & Document, {}> {
+    if (_.isNil(this._dbModel)) {
+      const schemaDefinition = _.mapValues(this.model.schema, 'db')
+      this._dbModel = mongoose.model<T & Document>(
+        this.model.name,
+        new mongoose.Schema(schemaDefinition)
+      )
+    }
+    return this._dbModel
   }
 
   public getGraphqlModel() {
@@ -63,7 +67,7 @@ export class ModelBuilder<T> {
 
     const update = {
       type,
-      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) }, input: inputType },
+      args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) }, input: { type: inputType } },
       resolve: async (__, { _id, input }) => {
         const updated = await DbModel.findByIdAndUpdate(_id, input, { new: true })
         if (_.isNil(updated)) throw new ValidationError('DISH_NOT_FOUND')
