@@ -14,9 +14,11 @@ export interface IField {
   graphql: { type: graphql.GraphQLScalarType }
   db: SchemaDefinition
   transform?: TTransformFunction
+  hideFromReadApis?: boolean
 }
 
 export enum ERole {
+  GUEST = 'GUEST',
   ADMIN = 'ADMIN',
   USER = 'USER',
   MANAGER = 'MANAGER',
@@ -37,4 +39,9 @@ export type ISchema = _.Dictionary<IField>
 export enum EApiType {
   QUERY = 'QUERY',
   MUTATION = 'MUTATION',
+}
+
+export enum EFieldAction {
+  READ = 'READ',
+  WRITE = 'WRITE',
 }

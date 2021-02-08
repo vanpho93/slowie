@@ -31,7 +31,7 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private getInputType() {
     return new graphql.GraphQLInputObjectType({
       name: `${this.model.name}UpdateInput`,
-      fields: _.omit(this.getFields(), '_id')
+      fields: _.omit(this.getFields('write'), '_id')
     })
   }
 }

@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
 import { ERole, IContext, IModel, transformWrapper } from '../core/metadata'
@@ -18,6 +19,10 @@ const userModel: IModel = {
     email: {
       graphql: { type: graphql.GraphQLString },
       db: { type: String },
+      transform: transformWrapper<string>((context: IContext, __value: string) => {
+        if (context.role === ERole.GUEST) return '****@***.***'
+        return null
+      })
     },
     age: {
       graphql: { type: graphql.GraphQLInt },
@@ -26,11 +31,8 @@ const userModel: IModel = {
     password: {
       graphql: { type: graphql.GraphQLString },
       db: { type: String },
-      transform: transformWrapper<string>((context: IContext, value: string) => {
-        if (context.role === ERole.ADMIN) return value
-        return null
-      })
-    }
+      hideFromReadApis: true,
+    },
   }
 }
 

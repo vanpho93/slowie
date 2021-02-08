@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { GraphQLFieldConfig, GraphQLFieldConfigMap } from 'graphql'
 import { Document, Model } from 'mongoose'
-import { EApiType, IContext, IModel } from '../../core/metadata'
+import { EApiType, IContext, IModel, EFieldAction } from '../../core/metadata'
 
 export interface IApiGenerator {
   generate(): GraphQLFieldConfigMap<any, any>
@@ -17,8 +17,10 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     protected model: IModel
   ) { }
 
-  getFields(): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
-    return _.mapValues(this.model.schema, 'graphql')
+  getFields(fieldAction: EFieldAction = EFieldAction.READ): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
+    const filter = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
+    const hiddenFields = _.chain(this.model.schema).filter(filter).keys().value()
+    return _.chain(this.model.schema).omit(hiddenFields).mapValues('graphql').value()
   }
 
   generate() {
