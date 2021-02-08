@@ -1,6 +1,6 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
-import { EApiType } from '../../core/metadata'
+import { EApiType, IContext } from '../../core/metadata'
 import { BaseApiGenerator } from './metadata'
 
 export class ListApiGenerator<T extends object> extends BaseApiGenerator<T> {
@@ -11,7 +11,10 @@ export class ListApiGenerator<T extends object> extends BaseApiGenerator<T> {
   getApi() {
     return {
       type: graphql.GraphQLList(this.getType()),
-      resolve: () => this.dbModel.find({}),
+      resolve: async (__, ___, context: IContext) => {
+        const items = await this.dbModel.find({})
+        return items.map((item) => this.transform(context, item))
+      },
     }
   }
 }

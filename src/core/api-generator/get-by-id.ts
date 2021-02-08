@@ -18,7 +18,7 @@ export class GetByIdApiGenerator<T extends object> extends BaseApiGenerator<T> {
         if (_.isNil(result)) throw new ValidationError(
           `${this.model.name.toUpperCase()}_NOT_FOUND`
         )
-        return result
+        return this.transform(context, result)
       }
     }
   }

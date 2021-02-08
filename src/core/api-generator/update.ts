@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from './metadata'
 import { ValidationError } from 'apollo-server'
-import { EApiType } from '../../core/metadata'
+import { EApiType, IContext } from '../../core/metadata'
 
 export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
@@ -18,12 +18,12 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
           type: this.getInputType(),
         }
       },
-      resolve: async (__, { _id, input }) => {
-        const updated = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
-        if (_.isNil(updated)) throw new ValidationError(
+      resolve: async (__, { _id, input }, context: IContext) => {
+        const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
+        if (_.isNil(result)) throw new ValidationError(
           `${this.model.name.toUpperCase()}_NOT_FOUND`
         )
-        return updated
+        return this.transform(context, result)
       },
     }
   }
