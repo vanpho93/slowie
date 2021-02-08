@@ -1,10 +1,19 @@
 import * as graphql from 'graphql'
 import { SchemaDefinition } from 'mongoose'
 
+export interface TTransformFunction<T = any> {
+  (context: IContext, value: T): null | T | Promise<null | T>
+}
+
+// for strong typed purpose
+export function transformWrapper<T>(fn: TTransformFunction<T>) {
+  return fn
+}
+
 export interface IField {
   graphql: { type: graphql.GraphQLScalarType }
   db: SchemaDefinition
-  canGet?: (context: IContext) => boolean | Promise<boolean>
+  transform?: TTransformFunction
 }
 
 export enum ERole {

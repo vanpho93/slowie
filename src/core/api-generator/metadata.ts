@@ -38,6 +38,10 @@ export abstract class BaseApiGenerator<T> implements IApiGenerator {
     return BaseApiGenerator._types[this.model.name]
   }
 
+  omitByContext() {
+
+  }
+
   abstract getKey(): string
   abstract getApi(): GraphQLFieldConfig<any, any>
 }

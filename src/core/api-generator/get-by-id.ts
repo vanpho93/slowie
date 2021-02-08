@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { ValidationError } from 'apollo-server'
-import { EApiType } from '../../core/metadata'
+import { EApiType, IContext } from '../../core/metadata'
 import { BaseApiGenerator } from './metadata'
 
 export class GetByIdApiGenerator<T> extends BaseApiGenerator<T> {
@@ -13,8 +13,8 @@ export class GetByIdApiGenerator<T> extends BaseApiGenerator<T> {
     return {
       type: this.getType(),
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: async (__, { _id }) => {
-        const result = await this.dbModel.findByIdAndDelete(_id)
+      resolve: async (__, { _id }, context: IContext) => {
+        const result = await this.dbModel.findById(_id)
         if (_.isNil(result)) throw new ValidationError(
           `${this.model.name.toUpperCase()}_NOT_FOUND`
         )
