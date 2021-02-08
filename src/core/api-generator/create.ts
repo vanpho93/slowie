@@ -3,7 +3,7 @@ import * as graphql from 'graphql'
 import { BaseApiGenerator } from './metadata'
 import { EApiType } from '../../core/metadata'
 
-export class CreateApiGenerator<T> extends BaseApiGenerator<T> {
+export class CreateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
 
   getKey() { return `create${this.model.name}` }

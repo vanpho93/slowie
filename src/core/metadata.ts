@@ -32,7 +32,7 @@ export interface IModel {
   schema: ISchema
 }
 
-export type ISchema = { [key: string]: IField /* | IFieldDefinition */ } 
+export type ISchema = _.Dictionary<IField>
 
 export enum EApiType {
   QUERY = 'QUERY',

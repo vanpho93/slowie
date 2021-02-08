@@ -4,7 +4,7 @@ import { BaseApiGenerator } from './metadata'
 import { ValidationError } from 'apollo-server'
 import { EApiType } from '../../core/metadata'
 
-export class UpdateApiGenerator<T> extends BaseApiGenerator<T> {
+export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
 
   getKey() { return `update${this.model.name}` }

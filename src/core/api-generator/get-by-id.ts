@@ -4,7 +4,7 @@ import { ValidationError } from 'apollo-server'
 import { EApiType, IContext } from '../../core/metadata'
 import { BaseApiGenerator } from './metadata'
 
-export class GetByIdApiGenerator<T> extends BaseApiGenerator<T> {
+export class GetByIdApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
 
   getKey() { return `get${this.model.name}` }

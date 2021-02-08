@@ -2,14 +2,14 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { GraphQLFieldConfig, GraphQLFieldConfigMap } from 'graphql'
 import { Document, Model } from 'mongoose'
-import { EApiType, IModel } from '../../core/metadata'
+import { EApiType, IContext, IModel } from '../../core/metadata'
 
 export interface IApiGenerator {
   generate(): GraphQLFieldConfigMap<any, any>
   type: EApiType
 }
 
-export abstract class BaseApiGenerator<T> implements IApiGenerator {
+export abstract class BaseApiGenerator<T extends object> implements IApiGenerator {
   abstract type: EApiType
 
   constructor(
@@ -38,8 +38,12 @@ export abstract class BaseApiGenerator<T> implements IApiGenerator {
     return BaseApiGenerator._types[this.model.name]
   }
 
-  omitByContext() {
-
+  transform(context: IContext, modelValue: T) {
+    return _.mapValues(modelValue, (value, key) => {
+      const { transform } = this.model.schema[key]
+      if (!transform) return value
+      return transform(context, value)
+    })
   }
 
   abstract getKey(): string
