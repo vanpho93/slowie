@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { GraphQLFieldConfig, GraphQLFieldConfigMap } from 'graphql'
 import { Document, Model } from 'mongoose'
-import { EApiType, IContext, IModel, EFieldAction } from '../../core/metadata'
+import { EApiType, IContext, IModel, EFieldAction, IField } from '../../core/metadata'
 
 export interface IApiGenerator {
   generate(): GraphQLFieldConfigMap<any, any>
@@ -18,8 +18,13 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
   ) { }
 
   getFields(fieldAction: EFieldAction = EFieldAction.READ): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
-    const filter = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
-    const hiddenFields = _.chain(this.model.schema).filter(filter).keys().value()
+    const filterOption = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
+    const hiddenFields = _.chain(this.model.schema)
+      .map((value, key) => ({ key, ...value }))
+      .filter(filterOption)
+      .map('key')
+      .value()
+
     return _.chain(this.model.schema).omit(hiddenFields).mapValues('graphql').value()
   }
 
@@ -42,7 +47,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   transform(context: IContext, modelValue: T) {
     return _.mapValues(modelValue, (value, key) => {
-      const { transform } = this.model.schema[key]
+      const transform = _.get(this.model.schema[key], 'transform')
       if (!transform) return value
       return transform(context, value)
     })

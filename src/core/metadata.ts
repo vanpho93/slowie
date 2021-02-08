@@ -15,6 +15,7 @@ export interface IField {
   db: SchemaDefinition
   transform?: TTransformFunction
   hideFromReadApis?: boolean
+  hideFromWriteApis?: boolean
 }
 
 export enum ERole {

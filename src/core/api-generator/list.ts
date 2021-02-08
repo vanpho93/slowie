@@ -13,7 +13,7 @@ export class ListApiGenerator<T extends object> extends BaseApiGenerator<T> {
       type: graphql.GraphQLList(this.getType()),
       resolve: async (_parent, _input, context: IContext) => {
         const items = await this.dbModel.find({})
-        return items.map((item) => this.transform(context, item))
+        return items.map((item) => this.transform(context, item.toObject()))
       },
     }
   }

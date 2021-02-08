@@ -33,7 +33,7 @@ const server = new ApolloServer({
   schema,
   context: ({ req }) => {
     const token = req.headers.authorization || '{ "role": "GUEST" }'
-    return JSON.stringify(token)
+    return JSON.parse(token)
   }
 })
 

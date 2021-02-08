@@ -19,9 +19,9 @@ const userModel: IModel = {
     email: {
       graphql: { type: graphql.GraphQLString },
       db: { type: String },
-      transform: transformWrapper<string>((context: IContext, __value: string) => {
+      transform: transformWrapper<string>((context: IContext, value: string) => {
         if (context.role === ERole.GUEST) return '****@***.***'
-        return null
+        return value
       })
     },
     age: {
@@ -32,6 +32,7 @@ const userModel: IModel = {
       graphql: { type: graphql.GraphQLString },
       db: { type: String },
       hideFromReadApis: true,
+      hideFromWriteApis: true,
     },
   }
 }
