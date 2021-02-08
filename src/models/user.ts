@@ -1,6 +1,6 @@
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
-import { IModel } from '../core/metadata'
+import { ERole, IContext, IModel } from '../core/metadata'
 import { ModelBuilder } from '../core/model-builder'
 
 const nanoid = customAlphabet('1234567890abcdef', 16)
@@ -13,7 +13,7 @@ const userModel: IModel = {
       db: {
         type: String,
         default: nanoid,
-      }
+      },
     },
     email: {
       graphql: {  type: graphql.GraphQLString  },
@@ -22,6 +22,11 @@ const userModel: IModel = {
     age: {
       graphql: { type: graphql.GraphQLInt },
       db: { type: Number },
+    },
+    password: {
+      graphql: {  type: graphql.GraphQLString  },
+      db: { type: String },
+      canGet: (context: IContext) => context.role === ERole.ADMIN
     }
   }
 }
