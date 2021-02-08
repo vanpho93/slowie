@@ -34,7 +34,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     if (_.isNil(cached)) {
       BaseApiGenerator._types[this.model.name] = new graphql.GraphQLObjectType({
         name: this.model.name,
-        fields: this.getFields(),
+        fields: this.getFields(EFieldAction.READ),
       })
     }
     return BaseApiGenerator._types[this.model.name]

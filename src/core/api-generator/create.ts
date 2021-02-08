@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from './metadata'
-import { EApiType, IContext } from '../../core/metadata'
+import { EApiType, EFieldAction, IContext } from '../../core/metadata'
 
 export class CreateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
@@ -21,7 +21,7 @@ export class CreateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private getInputType() {
     return new graphql.GraphQLInputObjectType({
       name: `${this.model.name}CreateInput`,
-      fields: _.omit(this.getFields('write'), '_id')
+      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id')
     })
   }
 }

@@ -13,7 +13,7 @@ export class GetByIdApiGenerator<T extends object> extends BaseApiGenerator<T> {
     return {
       type: this.getType(),
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: async (__, { _id }, context: IContext) => {
+      resolve: async (_parent, { _id }, context: IContext) => {
         const result = await this.dbModel.findById(_id)
         if (_.isNil(result)) throw new ValidationError(
           `${this.model.name.toUpperCase()}_NOT_FOUND`

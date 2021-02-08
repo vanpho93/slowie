@@ -11,7 +11,7 @@ export class ListApiGenerator<T extends object> extends BaseApiGenerator<T> {
   getApi() {
     return {
       type: graphql.GraphQLList(this.getType()),
-      resolve: async (__, ___, context: IContext) => {
+      resolve: async (_parent, _input, context: IContext) => {
         const items = await this.dbModel.find({})
         return items.map((item) => this.transform(context, item))
       },
