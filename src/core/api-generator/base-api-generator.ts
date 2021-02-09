@@ -11,7 +11,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     protected model: IModel
   ) { }
 
-  getFields(fieldAction: EFieldAction = EFieldAction.READ): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
+  protected getFields(fieldAction: EFieldAction = EFieldAction.READ): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
     const filterOption = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
     const hiddenFields = _.chain(this.model.schema)
       .map((value, key) => ({ key, ...value }))
@@ -39,11 +39,11 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     return BaseApiGenerator._types[this.model.name]
   }
 
-  transform(context: IContext, modelValue: T) {
+  protected transform(context: IContext, modelValue: T) {
     return _.mapValues(modelValue, (value, key) => {
-      const transform = _.get(this.model.schema[key], 'transform')
-      if (!transform) return value
-      return transform(context, value)
+      const transformField = _.get(this.model.schema[key], 'transform')
+      if (!transformField) return value
+      return transformField(context, value)
     })
   }
 

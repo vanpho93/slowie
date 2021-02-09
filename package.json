@@ -15,7 +15,7 @@
     "start": "ts-node src/index.ts",
     "play": "ts-node src/play.ts",
     "dev": "nodemon --exec yarn start -e ts",
-    "test": "DOTENV_CONFIG_PATH=test.env mocha 'src/**/*.test.ts' --recursive",
+    "test": "DOTENV_CONFIG_PATH=test.env mocha --require ts-node/register 'src/**/*.test.ts' --recursive",
     "coverage-test": "DOTENV_CONFIG_PATH=test.env nyc yarn test",
     "report": "nyc report --reporter=text-lcov | coveralls",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
@@ -58,9 +58,9 @@
     "exclude": [
       "src/**/*.test.ts"
     ],
-    "branches": 0,
-    "lines": 0,
-    "functions": 0,
-    "statements": 0
+    "branches": 1,
+    "lines": 1,
+    "functions": 1,
+    "statements": 1
   }
 }
