@@ -11,7 +11,7 @@ export function transformWrapper<T>(fn: TTransformFunction<T>) {
 }
 
 export interface IField {
-  graphql: { type: graphql.GraphQLScalarType }
+  graphql: { type: graphql.GraphQLScalarType, description?: string }
   db: SchemaDefinition
   transform?: TTransformFunction
   hideFromReadApis?: boolean
@@ -45,4 +45,9 @@ export enum EApiType {
 export enum EFieldAction {
   READ = 'READ',
   WRITE = 'WRITE',
+}
+
+export interface IApiGenerator {
+  generate(): graphql.GraphQLFieldConfigMap<any, any>
+  type: EApiType
 }

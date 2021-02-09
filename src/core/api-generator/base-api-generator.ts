@@ -2,8 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { GraphQLFieldConfig } from 'graphql'
 import { Document, Model } from 'mongoose'
-import { EApiType, IContext, IModel, EFieldAction } from '../../core/metadata'
-import { IApiGenerator } from './metadata'
+import { EApiType, IContext, IModel, EFieldAction, IApiGenerator } from '../../core/metadata'
 
 export abstract class BaseApiGenerator<T extends object> implements IApiGenerator {
   abstract type: EApiType

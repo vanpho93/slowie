@@ -17,7 +17,7 @@ const userModel: IModel = {
       },
     },
     email: {
-      graphql: { type: graphql.GraphQLString },
+      graphql: { type: graphql.GraphQLString, description: 'GUEST cannot see it' },
       db: { type: String },
       transform: transformWrapper<string>((context: IContext, value: string) => {
         if (context.role === ERole.GUEST) return '****@***.***'

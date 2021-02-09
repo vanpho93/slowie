@@ -5,8 +5,7 @@ import { RemoveApiGenerator } from './remove'
 import { UpdateApiGenerator } from './update'
 import { CreateApiGenerator } from './create'
 import { Document, Model } from 'mongoose'
-import { IModel } from '../../core/metadata'
-import { IApiGenerator } from './metadata'
+import { IModel, IApiGenerator } from '../../core/metadata'
 
 interface BaseApiGeneratorConstructor<T> {
   new(
