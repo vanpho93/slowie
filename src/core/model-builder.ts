@@ -6,7 +6,7 @@ import { ApiGenerator } from './api-generator'
 
 export class ModelBuilder<T> {
   constructor(private model: IModel) { }
-  
+
   private _dbModel: any
   public getDbModel(): Model<T & Document, {}> {
     if (_.isNil(this._dbModel)) {

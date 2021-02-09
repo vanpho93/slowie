@@ -1,19 +1,19 @@
 import * as graphql from 'graphql'
 import { SchemaDefinition } from 'mongoose'
 
-export interface TTransformFunction<T = any> {
+export interface ITransformFunction<T = any> {
   (context: IContext, value: T): null | T | Promise<null | T>
 }
 
 // for strong typed purpose
-export function transformWrapper<T>(fn: TTransformFunction<T>) {
+export function transformWrapper<T>(fn: ITransformFunction<T>) {
   return fn
 }
 
 export interface IField {
   graphql: { type: graphql.GraphQLScalarType, description?: string }
   db: SchemaDefinition
-  transform?: TTransformFunction
+  transform?: ITransformFunction
   hideFromReadApis?: boolean
   hideFromWriteApis?: boolean
 }

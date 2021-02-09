@@ -11,7 +11,7 @@ export class Slowie {
   }
 
   private start() {
-    if(this.input.onReady) this.input.onReady()
+    if (this.input.onReady) this.input.onReady()
   }
 
   constructor(private input: ISlowieInput) {

@@ -16,7 +16,7 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
         _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
         input: {
           type: this.getInputType(),
-        }
+        },
       },
       resolve: async (_parent, { _id, input }, context: IContext) => {
         const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
@@ -31,7 +31,7 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private getInputType() {
     return new graphql.GraphQLInputObjectType({
       name: `${this.model.name}UpdateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id')
+      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })
   }
 }

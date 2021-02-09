@@ -7,14 +7,14 @@ import { CreateApiGenerator } from './create'
 import { Document, Model } from 'mongoose'
 import { IModel, IApiGenerator } from '../../core/metadata'
 
-interface BaseApiGeneratorConstructor<T> {
+interface IBaseApiGeneratorConstructor<T> {
   new(
     dbModel: Model<T & Document, {}>,
     model: IModel
   ): IApiGenerator
 }
 
-export const apiGeneratorConstructors: BaseApiGeneratorConstructor<any>[] = [
+export const apiGeneratorConstructors: IBaseApiGeneratorConstructor<any>[] = [
   GetByIdApiGenerator,
   ListApiGenerator,
   RemoveApiGenerator,
@@ -26,7 +26,7 @@ export class ApiGenerator {
   static generate<T>(dbModel: Model<T & Document, {}>, model: IModel) {
     return _.map(
       apiGeneratorConstructors,
-      (ApiGenerator: BaseApiGeneratorConstructor<any>) => {
+      (ApiGenerator: IBaseApiGeneratorConstructor<any>) => {
         return new ApiGenerator(dbModel, model)
       })
   }

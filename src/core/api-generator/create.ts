@@ -22,7 +22,7 @@ export class CreateApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private getInputType() {
     return new graphql.GraphQLInputObjectType({
       name: `${this.model.name}CreateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id')
+      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })
   }
 }

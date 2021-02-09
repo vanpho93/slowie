@@ -1,6 +1,5 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { GraphQLFieldConfig } from 'graphql'
 import { Document, Model } from 'mongoose'
 import { EApiType, IContext, IModel, EFieldAction, IApiGenerator } from '../../core/metadata'
 
@@ -49,5 +48,5 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
   }
 
   abstract getKey(): string
-  abstract getApi(): GraphQLFieldConfig<any, any>
+  abstract getApi(): graphql.GraphQLFieldConfig<any, any>
 }

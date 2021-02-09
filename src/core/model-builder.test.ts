@@ -4,7 +4,7 @@ import { IModel } from './metadata'
 
 const nanoid = customAlphabet('1234567890abcdef', 16)
 
-const user: IModel = {
+const user = {
   name: 'User',
   schema: {
     _id: {
@@ -15,7 +15,7 @@ const user: IModel = {
       }
     },
     email: {
-      graphql: {  type: graphql.GraphQLString  },
+      graphql: { type: graphql.GraphQLString },
       db: { type: String },
     },
     age: {
@@ -23,4 +23,4 @@ const user: IModel = {
       db: { type: Number },
     }
   }
-}
+};

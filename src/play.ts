@@ -16,12 +16,12 @@ const getFieldsByApiType = (type: EApiType) => _.chain(apis)
 
 const query = new graphql.GraphQLObjectType({
   name: 'Query',
-  fields: getFieldsByApiType(EApiType.QUERY)
+  fields: getFieldsByApiType(EApiType.QUERY),
 })
 
 const mutation = new graphql.GraphQLObjectType({
   name: 'Mutation',
-  fields: getFieldsByApiType(EApiType.MUTATION)
+  fields: getFieldsByApiType(EApiType.MUTATION),
 })
 
 const schema = new graphql.GraphQLSchema({
@@ -32,9 +32,9 @@ const schema = new graphql.GraphQLSchema({
 const server = new ApolloServer({
   schema,
   context: ({ req }) => {
-    const token = req.headers.authorization || '{ "role": "GUEST" }'
+    const token = _.defaultTo (req.headers.authorization, '{ "role": "GUEST" }')
     return JSON.parse(token)
-  }
+  },
 })
 
 server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))

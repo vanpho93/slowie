@@ -19,7 +19,7 @@ export class GetByIdApiGenerator<T extends object> extends BaseApiGenerator<T> {
           `${this.model.name.toUpperCase()}_NOT_FOUND`
         )
         return this.transform(context, result)
-      }
+      },
     }
   }
 }

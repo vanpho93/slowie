@@ -34,7 +34,7 @@ const userModel: IModel = {
       hideFromReadApis: true,
       hideFromWriteApis: true,
     },
-  }
+  },
 }
 
 interface IUser {}
