@@ -19,7 +19,8 @@ jobs:
 
       # run tests!
       - run: yarn tslint
-      - run: yarn test
+      - run: yarn coverage-test
+      - run: yarn report
 
       # save caches
       - save_cache:

@@ -27,6 +27,7 @@
     "@types/mongoose": "^5.10.1",
     "@types/sinon": "^9.0.10",
     "chai": "^4.3.0",
+    "coveralls": "^3.1.0",
     "mocha": "^8.2.1",
     "nodemon": "^2.0.6",
     "nyc": "^15.1.0",
@@ -57,9 +58,9 @@
     "exclude": [
       "src/**/*.test.ts"
     ],
-    "branches": 10,
-    "lines": 10,
-    "functions": 10,
-    "statements": 10
+    "branches": 0,
+    "lines": 0,
+    "functions": 0,
+    "statements": 0
   }
 }
