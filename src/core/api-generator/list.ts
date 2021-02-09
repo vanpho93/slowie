@@ -1,7 +1,7 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
 import { EApiType, IContext } from '../../core/metadata'
-import { BaseApiGenerator } from './metadata'
+import { BaseApiGenerator } from './base-api-generator'
 
 export class ListApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.QUERY

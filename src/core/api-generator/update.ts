@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { BaseApiGenerator } from './metadata'
+import { BaseApiGenerator } from './base-api-generator'
 import { ValidationError } from 'apollo-server'
 import { EApiType, EFieldAction, IContext } from '../../core/metadata'
 

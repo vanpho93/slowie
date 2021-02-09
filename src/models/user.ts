@@ -22,7 +22,7 @@ const userModel: IModel = {
       transform: transformWrapper<string>((context: IContext, value: string) => {
         if (context.role === ERole.GUEST) return '****@***.***'
         return value
-      })
+      }),
     },
     age: {
       graphql: { type: graphql.GraphQLInt },
