@@ -2,23 +2,23 @@ import * as td from 'testdouble'
 import * as graphql from 'graphql'
 import { expect } from 'chai'
 import { EFieldAction } from '../../core/metadata'
-import { TestUtils, Value } from '../../helpers'
+import { TestUtils } from '../../helpers'
 import { BaseApiGenerator } from './base-api-generator'
 
 class DummyApiGenerator extends BaseApiGenerator<{}> {
-  type = Value.NO_MATTER()
+  type = TestUtils.NO_MATTER_VALUE()
 
   getKey() { return 'dummy' }
 
   getApi() {
-    return Value.NO_MATTER_OBJECT()
+    return TestUtils.NO_MATTER_VALUE()
   }
 }
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#transform', () => {
     const apiGenerator = new DummyApiGenerator(
-      Value.NO_MATTER('DbModel'),
+      TestUtils.NO_MATTER_VALUE('DbModel'),
       <any> {
         schema: {
           shouldRemain: {},
@@ -38,17 +38,17 @@ describe(TestUtils.getTestTitle(__filename), () => {
     }
 
     expect(
-      apiGenerator['transform'](Value.wrap({ role: 'GUEST' }), value)
+      apiGenerator['transform'](<any>{ role: 'GUEST' }, value)
     ).to.deep.equal({ shouldRemain: 'constant', shouldChange: 'abcd' })
 
     expect(
-      apiGenerator['transform'](Value.wrap({ role: 'ADMIN' }), value)
+      apiGenerator['transform'](<any>{ role: 'ADMIN' }, value)
     ).to.deep.equal(value)
   })
 
   it('#getFields', () => {
     const apiGenerator = new DummyApiGenerator(
-      Value.NO_MATTER('DbModel'),
+      TestUtils.NO_MATTER_VALUE('DbModel'),
       <any> {
         schema: {
           both: {
@@ -83,7 +83,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
       .thenReturn({ age: { type: graphql.GraphQLInt } })
 
     const apiGenerator = new DummyApiGenerator(
-      Value.NO_MATTER('DbModel'),
+      TestUtils.NO_MATTER_VALUE('DbModel'),
       {
         name: 'User',
         schema: {},
@@ -93,5 +93,11 @@ describe(TestUtils.getTestTitle(__filename), () => {
     expect(
       apiGenerator['getOutputType']().getFields().age
     ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
+  })
+
+  it('#generate', () => {
+    td.replace(DummyApiGenerator.prototype, 'getApi', () => 'fake_api')
+    expect(DummyApiGenerator.prototype.generate())
+      .to.deep.equal({ dummy: 'fake_api' })
   })
 })
