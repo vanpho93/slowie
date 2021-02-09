@@ -1,1 +1,5 @@
-import { } from 'chai'
+describe('Test', () => {
+  it('Always pass', () => {
+    //
+  })
+})
