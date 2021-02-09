@@ -11,7 +11,7 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getType(),
+      type: this.getOutputType(),
       args: {
         _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
         input: {

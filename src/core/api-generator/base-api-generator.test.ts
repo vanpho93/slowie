@@ -1,3 +1,5 @@
+import * as td from 'testdouble'
+import * as graphql from 'graphql'
 import { expect } from 'chai'
 import { EFieldAction } from '../../core/metadata'
 import { TestUtils, Value } from '../../helpers'
@@ -69,5 +71,27 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
     expect(apiGenerator['getFields'](EFieldAction.WRITE))
       .to.deep.equal({ both: {}, onlyWrite: {} })
+  })
+
+  it('#getOutputType', () => {
+    td.replace(
+      DummyApiGenerator.prototype,
+      <any> 'getFields'
+    )
+    td
+      .when(DummyApiGenerator.prototype['getFields'](EFieldAction.READ))
+      .thenReturn({ age: { type: graphql.GraphQLInt } })
+
+    const apiGenerator = new DummyApiGenerator(
+      Value.NO_MATTER('DbModel'),
+      {
+        name: 'User',
+        schema: {},
+      }
+    )
+
+    expect(
+      apiGenerator['getOutputType']().getFields().age
+    ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
   })
 })

@@ -1,5 +1,7 @@
-import * as sinon from 'sinon'
+import { BaseApiGenerator } from './core/api-generator/base-api-generator'
+import * as td from 'testdouble'
 
 beforeEach(() => {
-  sinon.reset()
+  td.reset()
+  BaseApiGenerator['_types'] = {}
 })

@@ -26,9 +26,9 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     return { [this.getKey()]: this.getApi() }
   }
 
-  static _types = {}
+  private static _types = {}
 
-  getType(): graphql.GraphQLObjectType {
+  protected getOutputType(): graphql.GraphQLObjectType {
     const cached = BaseApiGenerator._types[this.model.name]
     if (_.isNil(cached)) {
       BaseApiGenerator._types[this.model.name] = new graphql.GraphQLObjectType({

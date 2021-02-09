@@ -10,7 +10,7 @@ export class CreateApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getType(),
+      type: this.getOutputType(),
       args: { input: { type: this.getInputType() } },
       resolve: async (__, { input }, context: IContext) => {
         const result = await this.dbModel.create(input)

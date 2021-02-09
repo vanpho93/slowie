@@ -11,7 +11,7 @@ export class GetByIdApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getType(),
+      type: this.getOutputType(),
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
       resolve: async (_parent, { _id }, context: IContext) => {
         const result = await this.dbModel.findById(_id)
