@@ -1,7 +1,7 @@
 import * as td from 'testdouble'
 import * as graphql from 'graphql'
 import { expect } from 'chai'
-import { EFieldAction } from '../../core/metadata'
+import { EFieldAction, transformWrapper } from '../../core/metadata'
 import { TestUtils } from '../../helpers'
 import { BaseApiGenerator } from './base-api-generator'
 
@@ -23,10 +23,10 @@ describe(TestUtils.getTestTitle(__filename), () => {
         schema: {
           shouldRemain: {},
           shouldChange: {
-            transform: ({ role }, value: string) => {
+            transform: transformWrapper(({ role }, value: string) => {
               if (role === 'GUEST') return 'abcd'
               return value
-            },
+            }),
           },
         },
       }
