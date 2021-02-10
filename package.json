@@ -5,6 +5,7 @@
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.19.0",
+    "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
     "lodash": "^4.17.20",
     "mongoose": "^5.10.16",
@@ -15,7 +16,7 @@
     "start": "ts-node src/index.ts",
     "play": "ts-node src/play.ts",
     "dev": "nodemon --exec yarn start -e ts",
-    "test": "DOTENV_CONFIG_PATH=test.env mocha --require ts-node/register 'src/**/*.test.ts' --recursive",
+    "test": "DOTENV_CONFIG_PATH=test.env mocha 'src/**/*.test.ts' --recursive",
     "coverage-test": "nyc yarn test",
     "report": "nyc report --reporter=text-lcov | coveralls",
     "tslint": "tslint --project tsconfig.json --config tslint.json"
@@ -61,5 +62,15 @@
     "lines": 1,
     "functions": 1,
     "statements": 1
+  },
+  "mocha": {
+    "full-trace": true,
+    "require": [
+      "dotenv/config",
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "bail": false,
+    "timeout": 10000
   }
 }
