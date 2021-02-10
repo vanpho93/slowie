@@ -27,7 +27,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
   })
 
   it('#getGraphqlApis', () => {
-    const modelBuilder = new ModelBuilder(<any> 'sample_model') 
+    const modelBuilder = new ModelBuilder(<any> 'sample_model')
 
     td.replace(modelBuilder, 'getDbModel')
     td.replace(ApiGenerator, 'generate')

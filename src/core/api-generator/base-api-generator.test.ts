@@ -90,8 +90,10 @@ describe(TestUtils.getTestTitle(__filename), () => {
       }
     )
 
+    const outputType = apiGenerator['getOutputType']()
+    expect(outputType).to.equal(apiGenerator['getOutputType']())
     expect(
-      apiGenerator['getOutputType']().getFields().age
+      outputType.getFields().age
     ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
   })
 
