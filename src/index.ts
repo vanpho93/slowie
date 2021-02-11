@@ -1,26 +1,4 @@
-export interface ISlowieInput {
-  modelDirectory: string
-  port?: number | string
-  onReady?: () => void
-}
+/* istanbul ignore file */
+import { server } from './server'
 
-export class Slowie {
-  static init(input: ISlowieInput) {
-    const instance = new Slowie(input)
-    return instance
-  }
-
-  private start() {
-    if (this.input.onReady) this.input.onReady()
-  }
-
-  constructor(private input: ISlowieInput) {
-    this.load()
-  }
-
-  private load() {
-    console.log('Slowie is loading')
-    console.log('Slowie loaded')
-    this.start()
-  }
-}
+server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))

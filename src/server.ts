@@ -29,12 +29,10 @@ const schema = new graphql.GraphQLSchema({
   mutation,
 })
 
-const server = new ApolloServer({
+export const server = new ApolloServer({
   schema,
   context: ({ req }) => {
-    const token = _.defaultTo (req.headers.authorization, '{ "role": "GUEST" }')
+    const token = _.defaultTo(req.headers.authorization, '{ "role": "GUEST" }')
     return JSON.parse(token)
   },
 })
-
-server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))
