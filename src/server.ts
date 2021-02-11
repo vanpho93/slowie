@@ -1,38 +1,15 @@
 import * as _ from 'lodash'
-import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
-import { apis as userApis } from './models/user'
-import { EApiType } from './core/metadata'
+import { ApiLoader, SchemaLoader } from './app-loader'
 
-const apis = [
-  ...userApis,
-]
-
-const getFieldsByApiType = (type: EApiType) => _.chain(apis)
-  .filter({ type })
-  .map(generator => generator.generate())
-  .reduce(_.merge)
-  .value()
-
-const query = new graphql.GraphQLObjectType({
-  name: 'Query',
-  fields: getFieldsByApiType(EApiType.QUERY),
-})
-
-const mutation = new graphql.GraphQLObjectType({
-  name: 'Mutation',
-  fields: getFieldsByApiType(EApiType.MUTATION),
-})
-
-const schema = new graphql.GraphQLSchema({
-  query,
-  mutation,
-})
-
-export const server = new ApolloServer({
-  schema,
-  context: ({ req }) => {
-    const token = _.defaultTo(req.headers.authorization, '{ "role": "GUEST" }')
-    return JSON.parse(token)
-  },
-})
+export async function getServer() {
+  const apiGenerators = await ApiLoader.getApis()
+  const schema = SchemaLoader.getSchemaFromApiGenerators(apiGenerators)
+  return new ApolloServer({
+    schema,
+    context: ({ req }) => {
+      const token = _.get(req, 'headers.authorization', '{ "role": "GUEST" }')
+      return JSON.parse(token)
+    },
+  })
+}

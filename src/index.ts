@@ -1,4 +1,6 @@
 /* istanbul ignore file */
-import { server } from './server'
+import { getServer } from './server'
 
-server.listen().then(({ url }) => console.log(`🚀 Server ready at ${url}`))
+getServer()
+  .then(server => server.listen())
+  .then(({ url }) => console.log(`🚀 Server ready at ${url}`))
