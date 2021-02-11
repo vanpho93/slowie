@@ -3,7 +3,11 @@ import * as path from 'path'
 import * as fs from 'fs'
 
 export class ApiLoader {
-  private static async getApis(paths: string[]) {
+  public static getApis() {
+    return this.getApisFromPaths(this.getPaths())
+  }
+
+  private static async getApisFromPaths(paths: string[]) {
     const importedObjects = await Promise.all(_.map(paths, path => import(path)))
     return _.chain(importedObjects)
       .map('apis')

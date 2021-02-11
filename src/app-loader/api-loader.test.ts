@@ -6,11 +6,21 @@ import { ApiLoader } from './api-loader'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getApis', async () => {
+    td.replace(ApiLoader, 'getPaths', () => 'paths')
+    td.replace(ApiLoader, 'getApisFromPaths')
+    td
+      .when(ApiLoader['getApisFromPaths'](<any>'paths'))
+      .thenResolve('apis')
+
+    expect(await ApiLoader.getApis()).to.equals('apis')
+  })
+
+  it('#getApisFromPaths', async () => {
     const folder = path.join(__dirname, 'just-for-test-only')
     const fileA = path.join(folder, 'a.ts')
     const fileB = path.join(folder, 'b.ts')
     const fileC = path.join(folder, 'c.ts')
-    const apis = await ApiLoader['getApis']([fileA, fileB, fileC])
+    const apis = await ApiLoader['getApisFromPaths']([fileA, fileB, fileC])
     expect(apis).to.deep.equal([1, 2, 3, 4])
   })
 
