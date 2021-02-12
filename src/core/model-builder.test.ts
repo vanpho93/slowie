@@ -3,7 +3,7 @@ import * as graphql from 'graphql'
 import { expect } from 'chai'
 import { TestUtils } from '../helpers'
 import { ModelBuilder } from './model-builder'
-import { ApiGenerator } from './api-generator'
+import { RootApiGenerator } from './api-generator/root-api-generator'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getDbModel', async () => {
@@ -30,8 +30,8 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const modelBuilder = new ModelBuilder(<any> 'sample_model')
 
     td.replace(modelBuilder, 'getDbModel')
-    td.replace(ApiGenerator, 'generate')
-    td.when(ApiGenerator.generate(
+    td.replace(RootApiGenerator, 'generate')
+    td.when(RootApiGenerator.generate(
       td.matchers.anything(),
       td.matchers.anything()
     )).thenReturn(<any>'_api_generators')

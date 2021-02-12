@@ -1,9 +1,9 @@
 import * as _ from 'lodash'
-import { GetByIdApiGenerator } from './get-by-id'
-import { ListApiGenerator } from './list'
-import { RemoveApiGenerator } from './remove'
-import { UpdateApiGenerator } from './update'
-import { CreateApiGenerator } from './create'
+import { ApiGenerator as GetByIdApiGenerator } from './get-by-id/api-generator'
+import { ApiGenerator as ListApiGenerator } from './list/api-generator'
+import { ApiGenerator as RemoveApiGenerator } from './remove/api-generator'
+import { ApiGenerator as UpdateApiGenerator } from './update/api-generator'
+import { ApiGenerator as CreateApiGenerator } from './create/api-generator'
 import { Document, Model } from 'mongoose'
 import { IModel, IApiGenerator } from '../metadata'
 
@@ -14,7 +14,7 @@ interface IBaseApiGeneratorConstructor<T> {
   ): IApiGenerator
 }
 
-export class ApiGenerator {
+export class RootApiGenerator {
   static apiGeneratorConstructors: IBaseApiGeneratorConstructor<any>[] = [
     GetByIdApiGenerator,
     ListApiGenerator,

@@ -1,1 +1,1 @@
-export * from './api-generator'
+export * from './root-api-generator'

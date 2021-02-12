@@ -1,10 +1,10 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { BaseApiGenerator } from './base-api-generator'
+import { BaseApiGenerator } from '../base-api-generator'
 import { ValidationError } from 'apollo-server'
-import { EApiType, EFieldAction, IContext } from '../../core/metadata'
+import { EApiType, EFieldAction, IContext } from '../../metadata'
 
-export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
+export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
 
   getKey() { return `update${this.model.name}` }
@@ -18,13 +18,7 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
           type: this.getInputType(),
         },
       },
-      resolve: async (_parent, { _id, input }, context: IContext) => {
-        const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
-        if (_.isNil(result)) throw new ValidationError(
-          `${this.model.name.toUpperCase()}_NOT_FOUND`
-        )
-        return this.transform(context, result)
-      },
+      resolve: this.resolve,
     }
   }
 
@@ -33,5 +27,13 @@ export class UpdateApiGenerator<T extends object> extends BaseApiGenerator<T> {
       name: `${this.model.name}UpdateInput`,
       fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })
+  }
+
+  private async resolve(_parent, { _id, input }, context: IContext) {
+    const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
+    if (_.isNil(result)) throw new ValidationError(
+      `${this.model.name.toUpperCase()}_NOT_FOUND`
+    )
+    return this.transform(context, result)
   }
 }

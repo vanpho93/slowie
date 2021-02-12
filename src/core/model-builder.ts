@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import { Document, Model } from 'mongoose'
 import { IModel } from './metadata'
 import { mongoose } from '../mongoose'
-import { ApiGenerator } from './api-generator'
+import { RootApiGenerator } from './api-generator/root-api-generator'
 
 export class ModelBuilder<T> {
   constructor(private model: IModel) { }
@@ -20,7 +20,7 @@ export class ModelBuilder<T> {
   }
 
   public getGraphqlApis() {
-    return ApiGenerator.generate(
+    return RootApiGenerator.generate(
       this.getDbModel(),
       this.model
     )
