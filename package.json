@@ -15,7 +15,6 @@
   },
   "scripts": {
     "start": "ts-node src/index.ts",
-    "play": "ts-node src/play.ts",
     "dev": "nodemon --exec yarn start -e ts",
     "test": "DOTENV_CONFIG_PATH=test.env mocha 'src/**/*.test.ts' --recursive",
     "coverage-test": "nyc yarn test",
