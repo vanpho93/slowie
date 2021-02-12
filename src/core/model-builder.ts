@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import { Document, Model } from 'mongoose'
 import { IModel } from './metadata'
 import { mongoose } from '../mongoose'
-import { RootApiGenerator } from './api-generator/root-api-generator'
+import { RootApiGenerator } from './api-generator'
 
 export class ModelBuilder<T> {
   constructor(private model: IModel) { }

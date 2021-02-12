@@ -47,10 +47,10 @@
       "ts-node/register"
     ],
     "reporter": [
+      "lcov",
       "text-summary",
       "html",
-      "text",
-      "text-lcov"
+      "text"
     ],
     "sourceMap": true,
     "instrument": true,

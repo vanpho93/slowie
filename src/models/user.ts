@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
