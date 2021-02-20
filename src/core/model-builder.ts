@@ -5,7 +5,7 @@ import { mongoose } from '../mongoose'
 import { RootApiGenerator } from './api-generator'
 
 export class ModelBuilder<T> {
-  constructor(private model: IModel) { }
+  constructor(private model: IModel<any>) { }
 
   private _dbModel: any
   public getDbModel(): Model<T & Document, {}> {

@@ -1,19 +1,19 @@
 import * as graphql from 'graphql'
 import { SchemaDefinition } from 'mongoose'
 
-export interface ITransformFunction<T = any> {
-  (context: IContext, value: T): null | T | Promise<null | T>
+export interface ITransformFunction<Value, Context> {
+  (context: Context, value: Value): null | Value | Promise<null | Value>
 }
 
 // for strong typed purpose
-export function transformWrapper<T>(fn: ITransformFunction<T>) {
+export function transformWrapper<Value, Context>(fn: ITransformFunction<Value, Context>) {
   return fn
 }
 
-export interface IField {
+export interface IField<Context, Value = any> {
   graphql: { type: graphql.GraphQLScalarType, description?: string }
   db: SchemaDefinition
-  transform?: ITransformFunction
+  transform?: ITransformFunction<Value, Context>
   hideFromReadApis?: boolean
   hideFromWriteApis?: boolean
 }
@@ -25,17 +25,12 @@ export enum ERole {
   MANAGER = 'MANAGER',
 }
 
-export interface IContext {
-  userId: string
-  role: ERole
-}
-
-export interface IModel {
+export interface IModel<Context> {
   name: string
-  schema: ISchema
+  schema: ISchema<Context>
 }
 
-export type ISchema = _.Dictionary<IField>
+export type ISchema<Context> = _.Dictionary<IField<Context>>
 
 export enum EApiType {
   QUERY = 'QUERY',

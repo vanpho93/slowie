@@ -10,7 +10,7 @@ import { IModel, IApiGenerator } from '../metadata'
 interface IBaseApiGeneratorConstructor<T> {
   new(
     dbModel: Model<T & Document, {}>,
-    model: IModel
+    model: IModel<any>
   ): IApiGenerator
 }
 
@@ -23,7 +23,7 @@ export class RootApiGenerator {
     CreateApiGenerator,
   ]
 
-  static generate<T>(dbModel: Model<T & Document, {}>, model: IModel) {
+  static generate<T>(dbModel: Model<T & Document, {}>, model: IModel<any>) {
     return _.map(
       this.apiGeneratorConstructors,
       (ApiGenerator: IBaseApiGeneratorConstructor<any>) => {

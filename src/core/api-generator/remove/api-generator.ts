@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
 import { UserInputError } from 'apollo-server'
-import { EApiType, IContext } from '../../metadata'
+import { EApiType } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
@@ -17,7 +17,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
     }
   }
 
-  private async resolve(_parent, { _id }, context: IContext) {
+  private async resolve(_parent, { _id }, context: any) {
     const result = await this.dbModel.findByIdAndDelete(_id)
     if (_.isNil(result)) throw new UserInputError(
       `${this.model.name.toUpperCase()}_NOT_FOUND`

@@ -14,7 +14,7 @@ export class Slowie<Context> {
 
   constructor(private config: { context: GetContextFunction<Context> }) {}
 
-  createModel(modelDefinition: IModel) {
+  createModel(modelDefinition: IModel<any>) {
     const builder = new ModelBuilder(modelDefinition)
     this._models[modelDefinition.name] = builder.getDbModel()
     this._apis.push(...builder.getGraphqlApis())

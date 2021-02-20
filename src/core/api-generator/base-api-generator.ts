@@ -1,14 +1,14 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { Document, Model } from 'mongoose'
-import { EApiType, IContext, IModel, EFieldAction, IApiGenerator } from '../../core/metadata'
+import { EApiType, IModel, EFieldAction, IApiGenerator } from '../../core/metadata'
 
 export abstract class BaseApiGenerator<T extends object> implements IApiGenerator {
   abstract type: EApiType
 
   constructor(
     protected dbModel: Model<T & Document, {}>,
-    protected model: IModel
+    protected model: IModel<any>
   ) { }
 
   protected getFields(fieldAction: EFieldAction): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
@@ -39,7 +39,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     return BaseApiGenerator._types[this.model.name]
   }
 
-  protected transform(context: IContext, modelValue: T) {
+  protected transform(context: any, modelValue: T) {
     return _.mapValues(modelValue, (value, key) => {
       const transformField = _.get(this.model.schema[key], 'transform')
       if (!transformField) return value

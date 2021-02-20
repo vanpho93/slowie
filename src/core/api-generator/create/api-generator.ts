@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
-import { EApiType, EFieldAction, IContext } from '../../metadata'
+import { EApiType, EFieldAction } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
@@ -23,7 +23,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
     })
   }
 
-  private async resolve(_parent, { input }, context: IContext) {
+  private async resolve(_parent, { input }, context: any) {
     const result = await this.dbModel.create(input)
     return this.transform(context, result)
   }
