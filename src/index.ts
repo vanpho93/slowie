@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import * as _ from 'lodash'
-import { IRequest, Slowie } from './core/slowie'
+import { IRequest, Slowie } from './core'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
 

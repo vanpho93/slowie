@@ -1,4 +1,4 @@
-[![Coverage Status](https://coveralls.io/repos/github/vanpho93/slowie/badge.svg?branch=master)](https://coveralls.io/github/vanpho93/slowie?branch=master)
+[![CircleCI](https://circleci.com/gh/vanpho93/slowie.svg?style=svg)](https://circleci.com/gh/vanpho93/slowie) [![Coverage Status](https://coveralls.io/repos/github/vanpho93/slowie/badge.svg?branch=master)](https://coveralls.io/github/vanpho93/slowie?branch=master)
 # Slowie
 
 A new framwork for `graphql` - `mongodb` - `redis` - `kakfa` focus on speeding up API development process.

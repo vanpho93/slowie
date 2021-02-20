@@ -58,10 +58,10 @@
     "exclude": [
       "src/**/*.test.ts"
     ],
-    "branches": 1,
-    "lines": 1,
-    "functions": 1,
-    "statements": 1
+    "branches": 100,
+    "lines": 100,
+    "functions": 100,
+    "statements": 100
   },
   "mocha": {
     "full-trace": true,

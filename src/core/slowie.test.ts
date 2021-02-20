@@ -5,6 +5,7 @@ import { TestUtils } from '../helpers'
 import { expect } from 'chai'
 import { Slowie } from './slowie'
 import { SchemaLoader } from './schema-loader'
+import { ModelBuilder } from './model-builder'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getServer', async () => {
@@ -27,5 +28,15 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const { query } = createTestClient(<any>server)
     const { data } = await query({ query: '{ ping }' })
     expect(data.ping).to.equal('pong')
+  })
+
+  it('#createModel', () => {
+    const app = new Slowie(<any>{})
+    td.replace(ModelBuilder.prototype, 'getDbModel', () => 'Model')
+    td.replace(ModelBuilder.prototype, 'getGraphqlApis', () => ['api1', 'api2'])
+
+    app.createModel(<any>{ name: 'User' })
+    expect(app['_models']).to.deep.equal({ User: 'Model' })
+    expect(app['_apis']).to.deep.equal(['api1', 'api2'])
   })
 })
