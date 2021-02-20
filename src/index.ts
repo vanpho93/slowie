@@ -52,6 +52,13 @@ app.createModel({
       graphql: { type: graphql.GraphQLString },
       db: { type: String },
       hideFromReadApis: true,
+    },
+    presenter: {
+      graphql: {
+        type: graphql.GraphQLString,
+        resolve: () => 'hello',
+      },
+      db: {},
       hideFromWriteApis: true,
     },
   },

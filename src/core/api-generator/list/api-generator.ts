@@ -11,7 +11,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   getApi() {
     return {
       type: graphql.GraphQLList(this.getOutputType()),
-      resolve: this.resolve,
+      resolve: this.resolve.bind(this),
     }
   }
 

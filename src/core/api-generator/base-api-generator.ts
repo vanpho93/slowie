@@ -11,7 +11,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     protected model: IModel<any>
   ) { }
 
-  protected getFields(fieldAction: EFieldAction): _.Dictionary<{ type: graphql.GraphQLScalarType }> {
+  protected getFields(fieldAction: EFieldAction): _.Dictionary<graphql.GraphQLFieldConfig<any, any>> {
     const filterOption = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
     const hiddenFields = _.chain(this.model.schema)
       .map((value, key) => ({ key, ...value }))

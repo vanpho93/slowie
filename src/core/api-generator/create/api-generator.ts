@@ -12,12 +12,12 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
     return {
       type: this.getOutputType(),
       args: { input: { type: this.getInputType() } },
-      resolve: this.resolve,
+      resolve: this.resolve.bind(this),
     }
   }
 
   private getInputType() {
-    return new graphql.GraphQLInputObjectType({
+    return new graphql.GraphQLInputObjectType(<any>{
       name: `${this.model.name}CreateInput`,
       fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })

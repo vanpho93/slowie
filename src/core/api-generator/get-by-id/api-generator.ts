@@ -13,7 +13,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
     return {
       type: this.getOutputType(),
       args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-      resolve: this.resolve,
+      resolve: this.resolve.bind(this),
     }
   }
 
