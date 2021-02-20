@@ -1,18 +1,20 @@
 /* istanbul ignore file */
-// import { getServer } from './server'
 
-// getServer()
-//   .then(server => server.listen())
-//   .then(({ url }) => console.log(`🚀 Server ready at ${url}`))
 import * as _ from 'lodash'
 import { IRequest, Slowie } from './core/slowie'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
-import { ERole, transformWrapper } from './core/metadata'
+
+export enum ERole {
+  GUEST = 'GUEST',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
+  MANAGER = 'MANAGER',
+}
 
 export interface IContext {
   userId: string
-  role: 'GUEST' | 'USER' | 'ADMIN'
+  role: ERole
 }
 
 const app = new Slowie<IContext>({
@@ -37,6 +39,10 @@ app.createModel({
     email: {
       graphql: { type: graphql.GraphQLString, description: 'GUEST cannot see it' },
       db: { type: String },
+      transform: (context: IContext, value: string) => {
+        if (context.role === ERole.GUEST) return '****@***.***'
+        return value
+      },
     },
     age: {
       graphql: { type: graphql.GraphQLInt },
@@ -51,4 +57,7 @@ app.createModel({
   },
 })
 
-app.start()
+app
+  .getServer()
+  .listen()
+  .then(({ url }) => console.log(`🚀 Server ready at ${url}`))

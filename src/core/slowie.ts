@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import { ApolloServer } from 'apollo-server'
 import { IModel } from './metadata'
 import { ModelBuilder } from './model-builder'
-import { SchemaLoader } from '../app-loader'
+import { SchemaLoader } from './schema-loader'
 
 export type IRequest = { headers: { [key: string]: string } }
 
@@ -14,17 +14,17 @@ export class Slowie<Context> {
 
   constructor(private config: { context: GetContextFunction<Context> }) {}
 
-  createModel(modelDefinition: IModel<any>) {
+  createModel(modelDefinition: IModel<Context>) {
     const builder = new ModelBuilder(modelDefinition)
     this._models[modelDefinition.name] = builder.getDbModel()
     this._apis.push(...builder.getGraphqlApis())
   }
 
-  start(...opts: Array<any>) {
+  getServer() {
     const schema = SchemaLoader.getSchemaFromApiGenerators(this._apis)
     return new ApolloServer({
       schema,
       context: ({ req }) => this.config.context(req),
-    }).listen(...opts)
+    })
   }
 }

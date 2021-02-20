@@ -3,7 +3,7 @@ import * as td from 'testdouble'
 import { expect } from 'chai'
 import { TestUtils } from '../helpers'
 import { SchemaLoader } from './schema-loader'
-import { EApiType } from '../core/metadata'
+import { EApiType } from './metadata'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getFieldsByApiType', () => {

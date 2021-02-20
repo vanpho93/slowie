@@ -1,6 +1,6 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
-import { EApiType, IApiGenerator } from '../core/metadata'
+import { EApiType, IApiGenerator } from './metadata'
 
 export class SchemaLoader {
   public static getSchemaFromApiGenerators(apiGenerators: IApiGenerator[]) {
