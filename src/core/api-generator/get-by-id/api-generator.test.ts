@@ -57,11 +57,14 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
     td.replace(generator, 'getOutputType', () => 'output_type')
     td.replace(generator, 'resolve', resolve)
-    expect(generator.getApi())
-      .to.deep.equal({
+
+    const api = generator.getApi()
+    expect(api).to.deep
+      .include({
         type: 'output_type',
         args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
-        resolve,
       })
+
+    expect(api.resolve()).to.equal('resolve')
   })
 })

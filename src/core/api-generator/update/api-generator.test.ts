@@ -61,14 +61,15 @@ describe(TestUtils.getTestTitle(__filename), () => {
     td.replace(generator, 'getOutputType', () => 'output_type')
     td.replace(generator, 'getInputType', () => 'input_type')
     td.replace(generator, 'resolve', resolve)
-    expect(generator.getApi())
-      .to.deep.equal({
+
+    const api = generator.getApi()
+    expect(api).to.deep
+      .include({
         type: 'output_type',
         args: {
           _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
           input: { type: 'input_type' },
         },
-        resolve,
       })
   })
 

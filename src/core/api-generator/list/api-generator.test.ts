@@ -42,10 +42,13 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
     td.replace(generator, 'getOutputType', () => graphql.GraphQLString)
     td.replace(generator, 'resolve', resolve)
-    expect(generator.getApi())
-      .to.deep.equal({
+
+    const api = generator.getApi()
+    expect(api).to.deep
+      .include({
         type: graphql.GraphQLList(graphql.GraphQLString),
-        resolve,
       })
+
+    expect(api.resolve()).to.equal('resolve')
   })
 })
