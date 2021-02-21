@@ -14,6 +14,9 @@ describe(TestUtils.getTestTitle(__filename), () => {
           db: { type: String },
           graphql: { type: graphql.GraphQLString },
         },
+        ref: {
+          graphql: { type: graphql.GraphQLString },
+        },
       },
     })
 

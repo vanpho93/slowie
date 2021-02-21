@@ -7,7 +7,7 @@ export interface ITransformFunction<Value, Context> {
 
 export interface IField<Context, Value = any> {
   graphql: graphql.GraphQLFieldConfig<any, any>
-  db: SchemaDefinition
+  db?: SchemaDefinition
   transform?: ITransformFunction<Value, Context>
   hideFromReadApis?: boolean
   hideFromWriteApis?: boolean

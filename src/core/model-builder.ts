@@ -10,7 +10,10 @@ export class ModelBuilder<T> {
   private _dbModel: any
   public getDbModel(): Model<T & Document, {}> {
     if (_.isNil(this._dbModel)) {
-      const schemaDefinition = _.mapValues(this.model.schema, 'db')
+      const schemaDefinition = _.omitBy(
+        _.mapValues(this.model.schema, 'db'),
+        _.isNil
+      )
       this._dbModel = mongoose.model<T & Document>(
         this.model.name,
         new mongoose.Schema(schemaDefinition)
