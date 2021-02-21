@@ -1,10 +1,11 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
-import { EApiType, EFieldAction } from '../../metadata'
+import { EApiType, EDefaultApis, EFieldAction } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
+  defaultApiType = EDefaultApis.CREATE
 
   getKey() { return `create${this.model.name}` }
 

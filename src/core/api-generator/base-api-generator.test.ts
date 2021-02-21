@@ -1,12 +1,13 @@
 import * as td from 'testdouble'
 import * as graphql from 'graphql'
 import { expect } from 'chai'
-import { EFieldAction } from '../../core/metadata'
+import { EDefaultApis, EFieldAction } from '../../core/metadata'
 import { TestUtils } from '../../helpers'
 import { BaseApiGenerator } from './base-api-generator'
 
 class DummyApiGenerator extends BaseApiGenerator<{}> {
   type = TestUtils.NO_MATTER_VALUE()
+  defaultApiType: EDefaultApis.GET_BY_ID
 
   getKey() { return 'dummy' }
 

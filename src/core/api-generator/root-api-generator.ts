@@ -24,10 +24,9 @@ export class RootApiGenerator {
   ]
 
   static generate<T>(dbModel: Model<T & Document, {}>, model: IModel<any>) {
-    return _.map(
-      this.apiGeneratorConstructors,
-      (ApiGenerator: IBaseApiGeneratorConstructor<any>) => {
-        return new ApiGenerator(dbModel, model)
-      })
+    return _.chain(this.apiGeneratorConstructors)
+      .map((ApiGenerator) => new ApiGenerator(dbModel, model))
+      .filter(generator => !_.includes(model.hideDefaultApis, generator.defaultApiType))
+      .value()
   }
 }

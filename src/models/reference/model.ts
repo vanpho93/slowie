@@ -1,14 +1,16 @@
 /* istanbul ignore file */
 
-import { app } from '../../app'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
 import { IReference } from './metadata'
+import { EDefaultApis } from '../../core'
+import { app } from '../../app'
 
 const nanoid = customAlphabet('1234567890abcdef', 16)
 
 const Model = app.createModel<IReference>({
   name: 'Reference',
+  hideDefaultApis: [EDefaultApis.CREATE],
   schema: {
     _id: {
       graphql: { type: graphql.GraphQLString },

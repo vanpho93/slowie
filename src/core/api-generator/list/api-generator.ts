@@ -1,10 +1,11 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
-import { EApiType } from '../../metadata'
+import { EApiType, EDefaultApis } from '../../metadata'
 import { BaseApiGenerator } from '../base-api-generator'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
+  defaultApiType = EDefaultApis.LIST
 
   getKey() { return `get${this.model.name}s` }
 

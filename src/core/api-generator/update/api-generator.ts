@@ -2,10 +2,11 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
 import { UserInputError } from 'apollo-server'
-import { EApiType, EFieldAction } from '../../metadata'
+import { EApiType, EDefaultApis, EFieldAction } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
+  defaultApiType = EDefaultApis.UPDATE
 
   getKey() { return `update${this.model.name}` }
 

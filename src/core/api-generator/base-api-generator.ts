@@ -1,9 +1,17 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { EApiType, IModel, EFieldAction, IApiGenerator, ModelOf } from '../../core/metadata'
+import {
+  EApiType,
+  IModel,
+  EFieldAction,
+  IApiGenerator,
+  ModelOf,
+  EDefaultApis,
+} from '../../core/metadata'
 
 export abstract class BaseApiGenerator<T extends object> implements IApiGenerator {
   abstract type: EApiType
+  abstract defaultApiType: EDefaultApis
 
   constructor(
     protected dbModel: ModelOf<T, any>,

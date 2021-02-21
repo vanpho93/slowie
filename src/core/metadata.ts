@@ -20,9 +20,18 @@ export interface IField<Context, Value = any> {
   hideFromWriteApis?: boolean
 }
 
+export enum EDefaultApis {
+  CREATE = 'CREATE',
+  UPDATE = 'UPDATE',
+  REMOVE = 'REMOVE',
+  GET_BY_ID = 'GET_BY_ID',
+  LIST = 'LIST',
+}
+
 export interface IModel<Context> {
   name: string
   schema: ISchema<Context>
+  hideDefaultApis?: EDefaultApis[]
 }
 
 export type ISchema<Context> = _.Dictionary<IField<Context>>
@@ -40,6 +49,7 @@ export enum EFieldAction {
 export interface IApiGenerator {
   generate(): graphql.GraphQLFieldConfigMap<any, any>
   type: EApiType
+  defaultApiType: EDefaultApis
 }
 
 export type ModelOf<T, Context> = Model<T & Document, {}> & { hook: Hook<T, Context> }
