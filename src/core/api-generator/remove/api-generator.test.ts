@@ -18,7 +18,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     it('remove successfully', async () => {
       td.replace(generator, 'dbModel', {
         findByIdAndDelete(_id: string) {
-          return { _id, name: 'Brian' }
+          return { toObject() { return { _id, name: 'Brian' } } }
         },
       })
 

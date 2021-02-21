@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import { app } from '../../app'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'

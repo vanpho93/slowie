@@ -18,7 +18,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     it('update successfully', async () => {
       td.replace(generator, 'dbModel', {
         findByIdAndUpdate(_id: string, input: {}) {
-          return _.merge({ _id }, input)
+          return { toObject() { return _.merge({ _id }, input) } }
         },
       })
 

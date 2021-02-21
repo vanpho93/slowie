@@ -39,4 +39,13 @@ describe(TestUtils.getTestTitle(__filename), () => {
     expect(app['_models']).to.deep.equal({ User: 'Model' })
     expect(app['_apis']).to.deep.equal(['api1', 'api2'])
   })
+
+  it('#getModel', () => {
+    const User = {}
+    td.replace(Slowie.prototype, '_models', { User })
+    expect(Slowie.prototype.getModel('User')).to.equal(User)
+
+    expect(() => Slowie.prototype.getModel('NotExists'))
+      .to.throw('Model NotExists not found.')
+  })
 })

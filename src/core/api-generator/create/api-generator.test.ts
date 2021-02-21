@@ -10,7 +10,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     td.replace(generator, 'transform', (context, value) => _.merge(context, value))
     td.replace(generator, 'dbModel', {
       create(input: {}) {
-        return _.merge({ _id: 'some_id' }, input)
+        return { toObject() { return _.merge({ _id: 'some_id' }, input) } }
       },
     })
 
