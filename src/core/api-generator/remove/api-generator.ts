@@ -18,10 +18,19 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { _id }, context: any) {
-    const result = await this.dbModel.findByIdAndDelete(_id)
-    if (_.isNil(result)) throw new UserInputError(
+    const toBeRemoved = await this.dbModel.findById(_id)
+    if (_.isNil(toBeRemoved)) throw new UserInputError(
       `${this.model.name.toUpperCase()}_NOT_FOUND`
     )
-    return this.transform(context, result.toObject())
+    for (const hook of this.dbModel.hook.beforeRemoveHooks) {
+      await hook(context, toBeRemoved)
+    }
+
+    const result = await this.dbModel.findByIdAndDelete(_id)
+
+    for (const hook of this.dbModel.hook.afterRemoveHooks) {
+      await hook(context, result)
+    }
+    return this.transform(context, result!.toObject())
   }
 }

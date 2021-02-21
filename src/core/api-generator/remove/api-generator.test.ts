@@ -16,25 +16,41 @@ describe(TestUtils.getTestTitle(__filename), () => {
     })
 
     it('remove successfully', async () => {
+      const beforeRemoveHook = td.function()
+      const afterRemoveHook = td.function()
+
       td.replace(generator, 'dbModel', {
+        findById(_id: string) {
+          return { toObject() { return { _id, name: 'Brian' } }, toBeRemoved: true }
+        },
         findByIdAndDelete(_id: string) {
-          return { toObject() { return { _id, name: 'Brian' } } }
+          return { toObject() { return { _id, name: 'Brian' } }, removed: true }
+        },
+        hook: {
+          beforeRemoveHooks: [beforeRemoveHook],
+          afterRemoveHooks: [afterRemoveHook],
         },
       })
 
+      const context = <any> { role: 'ADMIN' }
       const output = await generator['resolve'](
         TestUtils.NO_MATTER_VALUE('parent'),
         { _id: 'some_id' },
-        <any> { role: 'ADMIN' }
+        context
       )
       expect(output)
         .to.deep
         .equal({ _id: 'some_id', name: 'Brian', role: 'ADMIN' })
+
+      const toBeRemovedObject = { toObject: td.matchers.anything(), toBeRemoved: true }
+      const removedObject = { toObject: td.matchers.anything(), removed: true }
+      td.verify(beforeRemoveHook(context, toBeRemovedObject))
+      td.verify(afterRemoveHook(context, removedObject))
     })
 
     it('not found', async () => {
       td.replace(generator, 'dbModel', {
-        findByIdAndDelete(_id: string) { return null },
+        findById(_id: string) { return null },
       })
 
       const output: UserInputError = await generator['resolve'](
