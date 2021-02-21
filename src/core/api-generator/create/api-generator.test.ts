@@ -35,8 +35,9 @@ describe(TestUtils.getTestTitle(__filename), () => {
       .to.deep
       .equal({ _id: 'some_id', name: 'Brian', role: 'ADMIN' })
 
+    const created = { toObject: td.matchers.anything() }
     td.verify(beforeCreateHook(context, input))
-    td.verify(afterCreateHook(context, input, { toObject: td.matchers.anything() }))
+    td.verify(afterCreateHook(context, created, input))
   })
 
   it('#getKey', () => {

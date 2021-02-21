@@ -12,7 +12,7 @@ export class Hook<Context, DefaultType> {
     this.beforeCreateHooks.push(cb)
   }
 
-  afterCreate<Input = Partial<Omit<DefaultType, '_id'>>, Created = DefaultType>(cb: (context: Context, input: Input, created: Created) => void | Promise<void>) {
+  afterCreate<Input = Partial<Omit<DefaultType, '_id'>>, Created = DefaultType>(cb: (context: Context, created: Created, input: Input) => void | Promise<void>) {
     this.afterCreateHooks.push(cb)
   }
 
@@ -28,7 +28,7 @@ export class Hook<Context, DefaultType> {
     this.beforeUpdateHooks.push(cb)
   }
 
-  afterUpdate<Updated, Input = Partial<Omit<DefaultType, '_id'>>>(cb: (context: Context, input: Input, updated: Updated) => void | Promise<void>) {
+  afterUpdate<Updated, Input = Partial<Omit<DefaultType, '_id'>>>(cb: (context: Context, updated: Updated, input: Input) => void | Promise<void>) {
     this.afterUpdateHooks.push(cb)
   }
 }

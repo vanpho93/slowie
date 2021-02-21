@@ -30,10 +30,19 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { _id, input }, context: any) {
-    const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
-    if (_.isNil(result)) throw new UserInputError(
+    const current = await this.dbModel.findById(_id)
+    if (_.isNil(current)) throw new UserInputError(
       `${this.model.name.toUpperCase()}_NOT_FOUND`
     )
-    return this.transform(context, result.toObject())
+
+    for (const hook of this.dbModel.hook.beforeUpdateHooks) {
+      await hook(context, input, current)
+    }
+
+    const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
+    for (const hook of this.dbModel.hook.afterUpdateHooks) {
+      await hook(context, result, input)
+    }
+    return this.transform(context, result!.toObject())
   }
 }

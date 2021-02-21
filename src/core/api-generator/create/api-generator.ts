@@ -24,11 +24,15 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { input }, context: any) {
-    for (const hook of this.dbModel.hook.beforeCreateHooks) await hook(context, input)
+    for (const hook of this.dbModel.hook.beforeCreateHooks) {
+      await hook(context, input)
+    }
 
     const result = await this.dbModel.create(input)
 
-    for (const hook of this.dbModel.hook.afterCreateHooks) await hook(context, input, result)
+    for (const hook of this.dbModel.hook.afterCreateHooks) {
+      await hook(context, result, input)
+    }
     return this.transform(context, result.toObject())
   }
 }

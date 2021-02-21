@@ -16,26 +16,43 @@ describe(TestUtils.getTestTitle(__filename), () => {
     })
 
     it('update successfully', async () => {
+      const beforeUpdateHook = td.function()
+      const afterUpdateHook = td.function()
+
       td.replace(generator, 'dbModel', {
+        findById(_id: string, input: {}) {
+          return { toObject() { return _.merge({ _id }, input) }, toBeUpdated: true }
+        },
         findByIdAndUpdate(_id: string, input: {}) {
-          return { toObject() { return _.merge({ _id }, input) } }
+          return { toObject() { return _.merge({ _id }, input) }, updated: true }
+        },
+        hook: {
+          beforeUpdateHooks: [beforeUpdateHook],
+          afterUpdateHooks: [afterUpdateHook],
         },
       })
 
+      const context = <any> { role: 'ADMIN' }
+      const input = { name: 'Brian' }
       const output = await generator['resolve'](
         TestUtils.NO_MATTER_VALUE('parent'),
-        { _id: 'some_id', input: { name: 'Brian' } },
-        <any> { role: 'ADMIN' }
+        { _id: 'some_id', input },
+        context
       )
 
       expect(output)
         .to.deep
         .equal({ _id: 'some_id', name: 'Brian', role: 'ADMIN' })
+
+      const toBeUpdatedObject = { toObject: td.matchers.anything(), toBeUpdated: true }
+      const updatedObject = { toObject: td.matchers.anything(), updated: true }
+      td.verify(beforeUpdateHook(context, input, toBeUpdatedObject))
+      td.verify(afterUpdateHook(context, updatedObject, input))
     })
 
     it('not found', async () => {
       td.replace(generator, 'dbModel', {
-        findByIdAndUpdate(_id: string, input: {}) {
+        findById(_id: string, input: {}) {
           return null
         },
       })
