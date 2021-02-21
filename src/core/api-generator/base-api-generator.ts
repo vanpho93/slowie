@@ -1,13 +1,12 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { Document, Model } from 'mongoose'
-import { EApiType, IModel, EFieldAction, IApiGenerator } from '../../core/metadata'
+import { EApiType, IModel, EFieldAction, IApiGenerator, ModelOf } from '../../core/metadata'
 
 export abstract class BaseApiGenerator<T extends object> implements IApiGenerator {
   abstract type: EApiType
 
   constructor(
-    protected dbModel: Model<T & Document, {}>,
+    protected dbModel: ModelOf<T, any>,
     protected model: IModel<any>
   ) { }
 

@@ -9,25 +9,25 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
     hook.beforeCreate(<any> 1)
     hook.afterCreate(<any> 2)
-    hook.beforeDelete(<any> 3)
-    hook.afterDelete(<any> 4)
+    hook.beforeRemove(<any> 3)
+    hook.afterRemove(<any> 4)
     hook.beforeUpdate(<any> 5)
     hook.afterUpdate(<any> 6)
 
     hook.beforeCreate(<any> 'a')
     hook.afterCreate(<any> 'b')
-    hook.beforeDelete(<any> 'c')
-    hook.afterDelete(<any> 'd')
+    hook.beforeRemove(<any> 'c')
+    hook.afterRemove(<any> 'd')
     hook.beforeUpdate(<any> 'e')
     hook.afterUpdate(<any> 'f')
 
     expect(hook).to.deep.include({
-      _beforeCreateHooks: [ 1, 'a' ],
-      _afterCreateHooks: [ 2, 'b' ],
-      _beforeDeleteHooks: [ 3, 'c' ],
-      _afterDeleteHooks: [ 4, 'd' ],
-      _beforeUpdateHooks: [ 5, 'e' ],
-      _afterUpdateHooks: [ 6, 'f' ],
+      beforeCreateHooks: [ 1, 'a' ],
+      afterCreateHooks: [ 2, 'b' ],
+      beforeRemoveHooks: [ 3, 'c' ],
+      afterRemoveHooks: [ 4, 'd' ],
+      beforeUpdateHooks: [ 5, 'e' ],
+      afterUpdateHooks: [ 6, 'f' ],
     })
   })
 })
