@@ -34,6 +34,6 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
     if (_.isNil(result)) throw new UserInputError(
       `${this.model.name.toUpperCase()}_NOT_FOUND`
     )
-    return this.transform(context, result)
+    return this.transform(context, result.toObject())
   }
 }

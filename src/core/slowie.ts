@@ -1,6 +1,6 @@
 import * as _ from 'lodash'
 import { ApolloServer } from 'apollo-server'
-import { IModel } from './metadata'
+import { IModel, ModelOf } from './metadata'
 import { ModelBuilder } from './model-builder'
 import { SchemaLoader } from './schema-loader'
 
@@ -14,10 +14,16 @@ export class Slowie<Context> {
 
   constructor(private config: { context: GetContextFunction<Context> }) {}
 
-  createModel(modelDefinition: IModel<Context>) {
+  createModel<T>(modelDefinition: IModel<Context>): ModelOf<T, Context> {
     const builder = new ModelBuilder(modelDefinition)
     this._models[modelDefinition.name] = builder.getDbModel()
     this._apis.push(...builder.getGraphqlApis())
+    return this._models[modelDefinition.name]
+  }
+
+  getModel<T = any>(name: string): ModelOf<T, Context> {
+    if (_.isNil(this._models[name])) throw new Error(`Model ${name} not found.`)
+    return this._models[name]
   }
 
   getServer() {

@@ -25,6 +25,6 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   private async resolve(_parent, { input }, context: any) {
     const result = await this.dbModel.create(input)
-    return this.transform(context, result)
+    return this.transform(context, result.toObject())
   }
 }

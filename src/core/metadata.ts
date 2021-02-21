@@ -1,5 +1,12 @@
 import * as graphql from 'graphql'
-import { SchemaDefinition } from 'mongoose'
+import {
+  Document,
+  Model,
+  Schema,
+  SchemaTypeOpts,
+  SchemaType,
+} from 'mongoose'
+import { Hook } from './hook'
 
 export interface ITransformFunction<Value, Context> {
   (context: Context, value: Value): null | Value | Promise<null | Value>
@@ -7,7 +14,7 @@ export interface ITransformFunction<Value, Context> {
 
 export interface IField<Context, Value = any> {
   graphql: graphql.GraphQLFieldConfig<any, any>
-  db?: SchemaDefinition
+  db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>
   hideFromReadApis?: boolean
   hideFromWriteApis?: boolean
@@ -34,3 +41,5 @@ export interface IApiGenerator {
   generate(): graphql.GraphQLFieldConfigMap<any, any>
   type: EApiType
 }
+
+export type ModelOf<T, Context> = Model<T & Document, {}> & { hook: Hook<T, Context> }

@@ -1,14 +1,15 @@
 import * as _ from 'lodash'
-import { Document, Model } from 'mongoose'
-import { IModel } from './metadata'
+import { Document } from 'mongoose'
+import { IModel, ModelOf } from './metadata'
 import { mongoose } from '../mongoose'
 import { RootApiGenerator } from './api-generator'
+import { Hook } from './hook'
 
-export class ModelBuilder<T> {
-  constructor(private model: IModel<any>) { }
+export class ModelBuilder<T, Context> {
+  constructor(private model: IModel<Context>) { }
 
   private _dbModel: any
-  public getDbModel(): Model<T & Document, {}> {
+  public getDbModel(): ModelOf<T, Context> {
     if (_.isNil(this._dbModel)) {
       const schemaDefinition = _.omitBy(
         _.mapValues(this.model.schema, 'db'),
@@ -18,7 +19,10 @@ export class ModelBuilder<T> {
         this.model.name,
         new mongoose.Schema(schemaDefinition)
       )
+
+      Object.assign(this._dbModel, { hook: new Hook() })
     }
+
     return this._dbModel
   }
 
