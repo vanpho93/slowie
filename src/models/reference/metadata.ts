@@ -3,4 +3,5 @@ export interface IReference {
   presenterId: string
   level: number
   userId: string
+  referenceCode: string
 }

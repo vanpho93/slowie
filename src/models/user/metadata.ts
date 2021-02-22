@@ -3,4 +3,9 @@ export interface IUser {
   email: string
   age: string
   password: string
+  presenterId: string
+}
+
+export interface IUserCreateInput extends Omit<IUser, '_id'> {
+  referenceCode: string
 }

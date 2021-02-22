@@ -1,4 +1,4 @@
-export class Hook<Context, DefaultType> {
+export class Hook<DefaultType, Context> {
   public beforeCreateHooks: Function[] = []
   public afterCreateHooks: Function[] = []
 
