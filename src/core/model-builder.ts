@@ -1,9 +1,10 @@
 import * as _ from 'lodash'
+import { mongoose } from '../mongoose'
 import { Document } from 'mongoose'
 import { IModel, ModelOf } from './metadata'
-import { mongoose } from '../mongoose'
 import { RootApiGenerator } from './api-generator'
 import { Hook } from './hook'
+import { TypeGenerator } from './type-generator'
 
 export class ModelBuilder<T, Context> {
   constructor(private model: IModel<Context>) { }
@@ -20,7 +21,8 @@ export class ModelBuilder<T, Context> {
         new mongoose.Schema(schemaDefinition)
       )
 
-      Object.assign(this._dbModel, { hook: new Hook() })
+      const predefinedTypes = TypeGenerator.generate(this.model)
+      Object.assign(this._dbModel, { hook: new Hook(), predefinedTypes })
     }
 
     return this._dbModel

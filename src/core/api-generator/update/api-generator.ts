@@ -12,22 +12,13 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getOutputType(),
+      type: this.dbModel.predefinedTypes.OUTPUT,
       args: {
         _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
-        input: {
-          type: this.getInputType(),
-        },
+        input: { type: this.dbModel.predefinedTypes.UPDATE_INPUT },
       },
       resolve: this.resolve.bind(this),
     }
-  }
-
-  private getInputType() {
-    return new graphql.GraphQLInputObjectType(<any>{
-      name: `${this.model.name}UpdateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
-    })
   }
 
   private async resolve(_parent, { _id, input }, context: any) {

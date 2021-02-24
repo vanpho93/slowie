@@ -52,4 +52,12 @@ export interface IApiGenerator {
   defaultApiType: EDefaultApis
 }
 
-export type ModelOf<T, Context> = Model<T & Document, {}> & { hook: Hook<T, Context> }
+export interface IPredefinedTypes {
+  OUTPUT: graphql.GraphQLObjectType
+  CREATE_INPUT: graphql.GraphQLInputObjectType
+  UPDATE_INPUT: graphql.GraphQLInputObjectType
+}
+
+export type ModelOf<T, Context> = Model<T & Document, {}> &
+  { hook: Hook<T, Context> } &
+  { predefinedTypes: IPredefinedTypes }

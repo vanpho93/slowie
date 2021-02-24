@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
-import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
-import { EApiType, EDefaultApis, EFieldAction } from '../../metadata'
+import { EApiType, EDefaultApis } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
@@ -11,17 +10,10 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getApi() {
     return {
-      type: this.getOutputType(),
-      args: { input: { type: this.getInputType() } },
+      type: this.dbModel.predefinedTypes.OUTPUT,
+      args: { input: { type: this.dbModel.predefinedTypes.CREATE_INPUT } },
       resolve: this.resolve.bind(this),
     }
-  }
-
-  private getInputType() {
-    return new graphql.GraphQLInputObjectType(<any>{
-      name: `${this.model.name}CreateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
-    })
   }
 
   private async resolve(_parent, { input }, context: any) {
