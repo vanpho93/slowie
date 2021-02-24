@@ -74,28 +74,23 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
   it('#getApi', () => {
     const resolve = () => 'resolve'
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'getOutputType', () => 'output_type')
-    td.replace(generator, 'getInputType', () => 'input_type')
+    const dbModel = <any>{
+      predefinedTypes: {
+        OUTPUT: 'OUTPUT',
+        UPDATE_INPUT: 'UPDATE_INPUT',
+      },
+    }
+    const generator = new ApiGenerator(dbModel, <any>{ name: 'User' })
     td.replace(generator, 'resolve', resolve)
 
     const api = generator.getApi()
     expect(api).to.deep
       .include({
-        type: 'output_type',
+        type: 'OUTPUT',
         args: {
           _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
-          input: { type: 'input_type' },
+          input: { type: 'UPDATE_INPUT' },
         },
       })
-  })
-
-  it('#getInputType', () => {
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'getFields', () => ({ _id: {}, name: {} }))
-    const config = generator['getInputType']().toConfig()
-    expect(config.name).to.equal('UserUpdateInput')
-    expect(config.fields.name).to.be.an.instanceOf(Object)
-    expect(config.fields._id).to.equal(undefined)
   })
 })

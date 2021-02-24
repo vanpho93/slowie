@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import * as _ from 'lodash'
 import { UserInputError } from 'apollo-server'
 import { IUser, IUserCreateInput } from '../../models/user/metadata'

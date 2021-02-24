@@ -1,7 +1,6 @@
 import * as td from 'testdouble'
-import * as graphql from 'graphql'
 import { expect } from 'chai'
-import { EDefaultApis, EFieldAction } from '../../core/metadata'
+import { EDefaultApis } from '../../core/metadata'
 import { TestUtils } from '../../helpers'
 import { BaseApiGenerator } from './base-api-generator'
 
@@ -45,57 +44,6 @@ describe(TestUtils.getTestTitle(__filename), () => {
     expect(
       apiGenerator['transform'](<any>{ role: 'ADMIN' }, value)
     ).to.deep.equal(value)
-  })
-
-  it('#getFields', () => {
-    const apiGenerator = new DummyApiGenerator(
-      TestUtils.NO_MATTER_VALUE('DbModel'),
-      <any> {
-        schema: {
-          both: {
-            graphql: {},
-          },
-          onlyRead: {
-            graphql: {},
-            hideFromWriteApis: true,
-          },
-          onlyWrite: {
-            graphql: {},
-            hideFromReadApis: true,
-          },
-        },
-      }
-    )
-
-    expect(apiGenerator['getFields'](EFieldAction.READ))
-      .to.deep.equal({ both: {}, onlyRead: {} })
-
-    expect(apiGenerator['getFields'](EFieldAction.WRITE))
-      .to.deep.equal({ both: {}, onlyWrite: {} })
-  })
-
-  it('#getOutputType', () => {
-    td.replace(
-      DummyApiGenerator.prototype,
-      <any> 'getFields'
-    )
-    td
-      .when(DummyApiGenerator.prototype['getFields'](EFieldAction.READ))
-      .thenReturn({ age: { type: graphql.GraphQLInt } })
-
-    const apiGenerator = new DummyApiGenerator(
-      TestUtils.NO_MATTER_VALUE('DbModel'),
-      {
-        name: 'User',
-        schema: {},
-      }
-    )
-
-    const outputType = apiGenerator['getOutputType']()
-    expect(outputType).to.equal(apiGenerator['getOutputType']())
-    expect(
-      outputType.getFields().age
-    ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
   })
 
   it('#generate', () => {

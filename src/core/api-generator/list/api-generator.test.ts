@@ -39,8 +39,12 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
   it('#getApi', () => {
     const resolve = () => 'resolve'
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'getOutputType', () => graphql.GraphQLString)
+    const dbModel = <any>{
+      predefinedTypes: {
+        OUTPUT: graphql.GraphQLString,
+      },
+    }
+    const generator = new ApiGenerator(dbModel, <any>{ name: 'User' })
     td.replace(generator, 'resolve', resolve)
 
     const api = generator.getApi()

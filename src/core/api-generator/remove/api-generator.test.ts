@@ -70,14 +70,18 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
   it('#getApi', () => {
     const resolve = () => 'resolve'
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'getOutputType', () => 'output_type')
+    const dbModel = <any>{
+      predefinedTypes: {
+        OUTPUT: 'OUTPUT',
+      },
+    }
+    const generator = new ApiGenerator(dbModel, <any>{ name: 'User' })
     td.replace(generator, 'resolve', resolve)
 
     const api = generator.getApi()
     expect(api).to.deep
       .include({
-        type: 'output_type',
+        type: 'OUTPUT',
         args: { _id: { type: graphql.GraphQLNonNull(graphql.GraphQLString) } },
       })
 

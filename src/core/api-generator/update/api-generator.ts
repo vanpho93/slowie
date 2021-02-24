@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import { BaseApiGenerator } from '../base-api-generator'
 import { UserInputError } from 'apollo-server'
-import { EApiType, EDefaultApis, EFieldAction } from '../../metadata'
+import { EApiType, EDefaultApis } from '../../metadata'
 
 export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION

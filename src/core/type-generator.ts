@@ -20,23 +20,6 @@ export class TypeGenerator {
     return _.chain(this.model.schema).omit(hiddenFields).mapValues('graphql').value()
   }
 
-  _outputType: {}
-  private readonly DEFAULT_TYPE = {}
-
-  getCachedOutputType(name: string): graphql.GraphQLObjectType {
-    if (_.isNil(this._outputType[name])) {
-      this._outputType[name] = this.DEFAULT_TYPE
-      return this._outputType[name]
-    }
-    return this._outputType[name]
-  }
-
-  setOutputType(name: string, objectType: graphql.GraphQLObjectType) {
-    const type = this.getCachedOutputType(name)
-    if (type !== this.DEFAULT_TYPE) throw new Error(`${type} declared twice`)
-    this._outputType[name] = objectType
-  }
-
   private getOutputType(): graphql.GraphQLObjectType {
     return new graphql.GraphQLObjectType({
       name: this.model.name,

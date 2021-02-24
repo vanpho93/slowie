@@ -3,7 +3,6 @@ import * as graphql from 'graphql'
 import {
   EApiType,
   IModel,
-  EFieldAction,
   IApiGenerator,
   ModelOf,
   EDefaultApis,
@@ -18,32 +17,8 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
     protected model: IModel<any>
   ) { }
 
-  protected getFields(fieldAction: EFieldAction): _.Dictionary<graphql.GraphQLFieldConfig<any, any>> {
-    const filterOption = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
-    const hiddenFields = _.chain(this.model.schema)
-      .map((value, key) => ({ key, ...value }))
-      .filter(filterOption)
-      .map('key')
-      .value()
-
-    return _.chain(this.model.schema).omit(hiddenFields).mapValues('graphql').value()
-  }
-
   generate() {
     return { [this.getKey()]: this.getApi() }
-  }
-
-  private static _types = {}
-
-  protected getOutputType(): graphql.GraphQLObjectType {
-    const cached = BaseApiGenerator._types[this.model.name]
-    if (_.isNil(cached)) {
-      BaseApiGenerator._types[this.model.name] = new graphql.GraphQLObjectType({
-        name: this.model.name,
-        fields: this.getFields(EFieldAction.READ),
-      })
-    }
-    return BaseApiGenerator._types[this.model.name]
   }
 
   protected transform(context: any, modelValue: T) {
