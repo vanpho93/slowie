@@ -4,6 +4,7 @@ import { app, IContext, ERole } from '../../app'
 import * as graphql from 'graphql'
 import { customAlphabet } from 'nanoid'
 import { IUser } from './metadata'
+import { TypeGenerator } from '../../core'
 
 const nanoid = customAlphabet('1234567890abcdef', 16)
 
@@ -36,8 +37,8 @@ app.createModel<IUser>({
     },
     presenter: {
       graphql: {
-        type: graphql.GraphQLString,
-        resolve: () => 'hello',
+        get type() { return TypeGenerator.getCachedOutputType('User') },
+        resolve: () => ({ email: 'vanpho93@gmail.com', age: 10 }),
       },
       hideFromWriteApis: true,
     },

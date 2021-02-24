@@ -1,11 +1,10 @@
-import './core'
-import { BaseApiGenerator } from './core/api-generator/base-api-generator'
 import * as td from 'testdouble'
 import { mongoose } from './mongoose'
+import { TypeGenerator } from './core'
 
 beforeEach(() => {
   td.reset()
-  BaseApiGenerator['_types'] = {}
+  TypeGenerator['_outputTypes'] = {}
 })
 
 after(() => mongoose.disconnect())

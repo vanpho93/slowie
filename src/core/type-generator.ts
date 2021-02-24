@@ -20,24 +20,43 @@ export class TypeGenerator {
     return _.chain(this.model.schema).omit(hiddenFields).mapValues('graphql').value()
   }
 
+  private static _outputTypes = {}
+  private static readonly DEFAULT_TYPE = {}
+
+  static getCachedOutputType(name: string): graphql.GraphQLObjectType {
+    if (_.isNil(this._outputTypes[name])) {
+      this._outputTypes[name] = this.DEFAULT_TYPE
+      return this._outputTypes[name]
+    }
+    return this._outputTypes[name]
+  }
+
+  private static setOutputType(name: string, objectType: graphql.GraphQLObjectType) {
+    const type = this.getCachedOutputType(name)
+    if (type !== this.DEFAULT_TYPE) throw new Error(`${type} declared twice`)
+    this._outputTypes[name] = objectType
+  }
+
   private getOutputType(): graphql.GraphQLObjectType {
-    return new graphql.GraphQLObjectType({
+    const type = new graphql.GraphQLObjectType({
       name: this.model.name,
-      fields: this.getFields(EFieldAction.READ),
+      fields: () => this.getFields(EFieldAction.READ),
     })
+    TypeGenerator.setOutputType(this.model.name, type)
+    return type
   }
 
   private getCreateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
       name: `${this.model.name}CreateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
+      fields: () => _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })
   }
 
   private getUpdateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
       name: `${this.model.name}UpdateInput`,
-      fields: _.omit(this.getFields(EFieldAction.WRITE), '_id'),
+      fields: () => _.omit(this.getFields(EFieldAction.WRITE), '_id'),
     })
   }
 
