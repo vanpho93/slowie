@@ -34,6 +34,10 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
   it('#getOutputType', () => {
     td.replace(
+      TypeGenerator,
+      <any> 'setOutputType'
+    )
+    td.replace(
       TypeGenerator.prototype,
       <any> 'getFields'
     )
@@ -49,9 +53,19 @@ describe(TestUtils.getTestTitle(__filename), () => {
     )
 
     const outputType = typeGenerator['getOutputType']()
+    td.verify(TypeGenerator['setOutputType']('User', outputType))
     expect(
       outputType.getFields().age
     ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
+  })
+
+  it('get and set output type', () => {
+    expect(TypeGenerator.getCachedOutputType('User')).to.deep.equal(TypeGenerator['DEFAULT_TYPE'])
+    expect(TypeGenerator['setOutputType']('User', <any> 'AN_OUTPUT_TYPE'))
+    expect(TypeGenerator.getCachedOutputType('User')).to.deep.equal('AN_OUTPUT_TYPE')
+
+    expect(() => TypeGenerator['setOutputType']('User', <any>'AN_OUTPUT_TYPE'))
+      .throws('User declared twice')
   })
 
   it('#getCreateInputType', () => {

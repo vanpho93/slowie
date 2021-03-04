@@ -33,7 +33,7 @@ export class TypeGenerator {
 
   private static setOutputType(name: string, objectType: graphql.GraphQLObjectType) {
     const type = this.getCachedOutputType(name)
-    if (type !== this.DEFAULT_TYPE) throw new Error(`${type} declared twice`)
+    if (type !== this.DEFAULT_TYPE) throw new Error(`${name} declared twice`)
     this._outputTypes[name] = objectType
   }
 
