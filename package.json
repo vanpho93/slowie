@@ -1,9 +1,11 @@
 {
   "name": "slowie",
-  "version": "1.0.1-2",
+  "version": "1.0.1-3",
   "main": "dist/core/index.js",
   "type": "dist/core/index.d.ts",
-  "files": ["dist/**/*"],
+  "files": [
+    "dist/**/*"
+  ],
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.19.0",
