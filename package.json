@@ -3,6 +3,7 @@
   "version": "1.0.1-2",
   "main": "dist/core/index.js",
   "type": "dist/core/index.d.ts",
+  "files": ["dist/**/*"],
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.19.0",
