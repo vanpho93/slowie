@@ -31,4 +31,11 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   abstract getKey(): string
   abstract getApi(): graphql.GraphQLFieldConfig<any, any>
+
+  protected async validate(input: any, context: any) {
+    for (const key of Object.keys(input)) {
+      const validateFunction = _.get(this.model.schema[key], 'validate')
+      if (validateFunction) await validateFunction(context, input)
+    }
+  }
 }

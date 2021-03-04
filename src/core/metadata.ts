@@ -12,10 +12,15 @@ export interface ITransformFunction<Value, Context> {
   (context: Context, value: Value): null | Value | Promise<null | Value>
 }
 
+export interface IValidateFunction<Value, Context> {
+  (context: Context, value: Value): void | Promise<void>
+}
+
 export interface IField<Context, Value = any> {
   graphql: graphql.GraphQLFieldConfig<any, any>
   db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>
+  validate?: IValidateFunction<Value, Context>
   hideFromReadApis?: boolean
   hideFromWriteApis?: boolean
 }
