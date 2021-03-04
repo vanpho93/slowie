@@ -14,13 +14,15 @@
       "./src/@types/",
       "./node_modules/@types/"
     ],
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "declaration": true
   },
   "include": [
     "src/**/*.ts",
     "src/config/*.json"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "dist"
   ]
 }

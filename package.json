@@ -1,7 +1,8 @@
 {
   "name": "slowie",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "type": "dist/index.d.ts",
   "license": "MIT",
   "dependencies": {
     "apollo-server": "^2.19.0",
@@ -19,7 +20,8 @@
     "test": "DOTENV_CONFIG_PATH=test.env mocha 'src/**/*.test.ts' --recursive",
     "coverage-test": "nyc yarn test",
     "report": "nyc report --reporter=text-lcov | coveralls",
-    "tslint": "tslint --project tsconfig.json --config tslint.json"
+    "tslint": "tslint --project tsconfig.json --config tslint.json",
+    "prepublish": "tsc"
   },
   "devDependencies": {
     "@types/chai": "^4.2.14",
