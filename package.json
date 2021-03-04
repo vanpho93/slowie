@@ -1,6 +1,6 @@
 {
   "name": "slowie",
-  "version": "1.0.1-1",
+  "version": "1.0.1-2",
   "main": "dist/core/index.js",
   "type": "dist/core/index.d.ts",
   "license": "MIT",
