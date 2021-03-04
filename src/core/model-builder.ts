@@ -1,6 +1,5 @@
 import * as _ from 'lodash'
-import { mongoose } from '../mongoose'
-import { Document } from 'mongoose'
+import * as mongoose from 'mongoose'
 import { IModel, ModelOf } from './metadata'
 import { RootApiGenerator } from './api-generator'
 import { Hook } from './hook'
@@ -16,7 +15,7 @@ export class ModelBuilder<T, Context> {
         _.mapValues(this.model.schema, 'db'),
         _.isNil
       )
-      this._dbModel = mongoose.model<T & Document>(
+      this._dbModel = mongoose.model<T & mongoose.Document>(
         this.model.name,
         new mongoose.Schema(schemaDefinition)
       )

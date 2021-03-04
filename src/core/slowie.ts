@@ -1,4 +1,5 @@
 import * as _ from 'lodash'
+import * as mongoose from 'mongoose'
 import { ApolloServer } from 'apollo-server'
 import { IModel, ModelOf } from './metadata'
 import { ModelBuilder } from './model-builder'
@@ -33,4 +34,6 @@ export class Slowie<Context> {
       context: ({ req }) => this.config.context(req),
     })
   }
+
+  readonly mongoose = mongoose
 }

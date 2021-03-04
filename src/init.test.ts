@@ -1,5 +1,5 @@
 import * as td from 'testdouble'
-import { mongoose } from './mongoose'
+import * as mongoose from 'mongoose'
 import { TypeGenerator } from './core'
 
 beforeEach(() => {
