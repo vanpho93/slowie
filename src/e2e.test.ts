@@ -10,8 +10,8 @@ describe(TestUtils.getTestTitle(__filename), () => {
       context: () => Promise.resolve({}),
     })
 
-    const User = app.createModel({
-      name: 'User',
+    const TestUser = app.createModel({
+      name: 'TestUser',
       schema: {
         email: {
           graphql: { type: graphql.GraphQLString },
@@ -20,17 +20,17 @@ describe(TestUtils.getTestTitle(__filename), () => {
       },
     })
 
-    await User.deleteMany({})
+    await TestUser.deleteMany({})
 
     const users = [
       { email: 'email1@gmail.com' },
       { email: 'email2@gmail.com' },
     ]
-    await User.insertMany(users)
+    await TestUser.insertMany(users)
 
     const server = app.getServer()
     const { query } = createTestClient(<any>server)
-    const { data } = await query({ query: '{ getUsers { email } }' })
-    expect(data.getUsers).to.deep.equal(users)
+    const { data } = await query({ query: '{ getTestUsers { email } }' })
+    expect(data.getTestUsers).to.deep.equal(users)
   })
 })
