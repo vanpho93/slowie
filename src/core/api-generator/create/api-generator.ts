@@ -17,7 +17,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { input }, context: any) {
-    // await this.validate(input, context)
+    await this.validate(input, context)
     for (const hook of this.dbModel.hook.beforeCreateHooks) {
       await hook(context, input)
     }

@@ -13,6 +13,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     beforeEach(() => {
       generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
       td.replace(generator, 'transform', (context, value) => _.merge(context, value))
+      td.replace(generator, 'validate', _.identity)
     })
 
     it('update successfully', async () => {

@@ -11,6 +11,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
     const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
     td.replace(generator, 'transform', (context, value) => _.merge(context, value))
+    td.replace(generator, 'validate', _.identity)
 
     td.replace(generator, 'dbModel', {
       create(input: {}) {

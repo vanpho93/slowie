@@ -22,7 +22,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { _id, input }, context: any) {
-    // await this.validate(input, context)
+    await this.validate(input, context)
     const current = await this.dbModel.findById(_id)
     if (_.isNil(current)) throw new UserInputError(
       `${this.modelDefinition.name.toUpperCase()}_NOT_FOUND`

@@ -34,6 +34,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   protected async validate(input: any, context: any) {
     for (const key of Object.keys(input)) {
+      console.log(key)
       const validateFunction = _.get(this.modelDefinition.schema[key], 'validate')
       if (validateFunction) await validateFunction(context, input)
     }
