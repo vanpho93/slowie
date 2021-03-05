@@ -8,7 +8,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
   defaultApiType = EDefaultApis.GET_BY_ID
 
-  getKey() { return `get${this.model.name}` }
+  getKey() { return `get${this.modelDefinition.name}` }
 
   getApi() {
     return {
@@ -21,7 +21,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private async resolve(_parent, { _id }, context: any) {
     const result = await this.dbModel.findById(_id)
     if (_.isNil(result)) throw new UserInputError(
-      `${this.model.name.toUpperCase()}_NOT_FOUND`
+      `${this.modelDefinition.name.toUpperCase()}_NOT_FOUND`
     )
     return this.transform(context, result.toObject())
   }

@@ -7,7 +7,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.QUERY
   defaultApiType = EDefaultApis.LIST
 
-  getKey() { return `get${this.model.name}s` }
+  getKey() { return `get${this.modelDefinition.name}s` }
 
   getApi() {
     return {

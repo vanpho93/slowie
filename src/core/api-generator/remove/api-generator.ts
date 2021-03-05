@@ -8,7 +8,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   type = EApiType.MUTATION
   defaultApiType = EDefaultApis.REMOVE
 
-  getKey() { return `remove${this.model.name}` }
+  getKey() { return `remove${this.modelDefinition.name}` }
 
   getApi() {
     return {
@@ -21,7 +21,7 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   private async resolve(_parent, { _id }, context: any) {
     const toBeRemoved = await this.dbModel.findById(_id)
     if (_.isNil(toBeRemoved)) throw new UserInputError(
-      `${this.model.name.toUpperCase()}_NOT_FOUND`
+      `${this.modelDefinition.name.toUpperCase()}_NOT_FOUND`
     )
     for (const hook of this.dbModel.hook.beforeRemoveHooks) {
       await hook(context, toBeRemoved)

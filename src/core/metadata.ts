@@ -33,7 +33,7 @@ export enum EDefaultApis {
   LIST = 'LIST',
 }
 
-export interface IModel<Context> {
+export interface IModelDefinition<Context> {
   name: string
   schema: ISchema<Context>
   hideDefaultApis?: EDefaultApis[]

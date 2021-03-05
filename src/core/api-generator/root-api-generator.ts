@@ -5,12 +5,12 @@ import { ApiGenerator as RemoveApiGenerator } from './remove/api-generator'
 import { ApiGenerator as UpdateApiGenerator } from './update/api-generator'
 import { ApiGenerator as CreateApiGenerator } from './create/api-generator'
 import { Document, Model } from 'mongoose'
-import { IModel, IApiGenerator } from '../metadata'
+import { IModelDefinition, IApiGenerator } from '../metadata'
 
 interface IBaseApiGeneratorConstructor<T> {
   new(
     dbModel: Model<T & Document, {}>,
-    model: IModel<any>
+    model: IModelDefinition<any>
   ): IApiGenerator
 }
 
@@ -23,10 +23,10 @@ export class RootApiGenerator {
     CreateApiGenerator,
   ]
 
-  static generate<T>(dbModel: Model<T & Document, {}>, model: IModel<any>) {
+  static generate<T>(dbModel: Model<T & Document, {}>, modelDefinition: IModelDefinition<any>) {
     return _.chain(this.apiGeneratorConstructors)
-      .map((ApiGenerator) => new ApiGenerator(dbModel, model))
-      .filter(generator => !_.includes(model.hideDefaultApis, generator.defaultApiType))
+      .map((ApiGenerator) => new ApiGenerator(dbModel, modelDefinition))
+      .filter(generator => !_.includes(modelDefinition.hideDefaultApis, generator.defaultApiType))
       .value()
   }
 }

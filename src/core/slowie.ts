@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as mongoose from 'mongoose'
 import { ApolloServer } from 'apollo-server'
-import { IModel, ModelOf } from './metadata'
+import { IModelDefinition, ModelOf } from './metadata'
 import { ModelBuilder } from './model-builder'
 import { SchemaLoader } from './schema-loader'
 
@@ -15,7 +15,7 @@ export class Slowie<Context> {
 
   constructor(private config: { context: GetContextFunction<Context> }) {}
 
-  createModel<T>(modelDefinition: IModel<Context>): ModelOf<T, Context> {
+  createModel<T>(modelDefinition: IModelDefinition<Context>): ModelOf<T, Context> {
     const builder = new ModelBuilder(modelDefinition)
     this._models[modelDefinition.name] = builder.getDbModel()
     this._apis.push(...builder.getGraphqlApis())

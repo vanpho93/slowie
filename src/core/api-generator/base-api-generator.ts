@@ -2,7 +2,7 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import {
   EApiType,
-  IModel,
+  IModelDefinition,
   IApiGenerator,
   ModelOf,
   EDefaultApis,
@@ -14,7 +14,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   constructor(
     protected dbModel: ModelOf<T, any>,
-    protected model: IModel<any>
+    protected modelDefinition: IModelDefinition<any>
   ) { }
 
   generate() {
@@ -23,7 +23,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   protected transform(context: any, modelValue: T) {
     return _.mapValues(modelValue, (value, key) => {
-      const transformField = _.get(this.model.schema[key], 'transform')
+      const transformField = _.get(this.modelDefinition.schema[key], 'transform')
       if (!transformField) return value
       return transformField(context, value)
     })
@@ -34,7 +34,7 @@ export abstract class BaseApiGenerator<T extends object> implements IApiGenerato
 
   protected async validate(input: any, context: any) {
     for (const key of Object.keys(input)) {
-      const validateFunction = _.get(this.model.schema[key], 'validate')
+      const validateFunction = _.get(this.modelDefinition.schema[key], 'validate')
       if (validateFunction) await validateFunction(context, input)
     }
   }
