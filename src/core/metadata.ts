@@ -7,6 +7,7 @@ import {
   SchemaType,
 } from 'mongoose'
 import { Hook } from './hook'
+import { ModelEnricher } from './model-enricher'
 
 export interface ITransformFunction<Value, Context> {
   (context: Context, value: Value): null | Value | Promise<null | Value>
@@ -63,6 +64,7 @@ export interface IPredefinedTypes {
   UPDATE_INPUT: graphql.GraphQLInputObjectType
 }
 
-export type ModelOf<T, Context> = Model<T & Document, {}> &
+export type ModelOf<T extends object, Context> = Model<T & Document, {}> &
   { hook: Hook<T, Context> } &
-  { predefinedTypes: IPredefinedTypes }
+  { predefinedTypes: IPredefinedTypes } &
+  { withContext: ModelEnricher<T, Context>['withContext'] }

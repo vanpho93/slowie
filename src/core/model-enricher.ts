@@ -2,7 +2,7 @@ import { UserInputError } from 'apollo-server'
 import * as _ from 'lodash'
 import * as mongoose from 'mongoose'
 import { Hook } from './hook'
-import { IModelDefinition, ModelOf } from './metadata'
+import { IModelDefinition } from './metadata'
 
 export class ModelEnricher<T extends object, Context> {
   constructor(
@@ -10,21 +10,16 @@ export class ModelEnricher<T extends object, Context> {
     private modelDefinition: IModelDefinition<Context>
   ) { }
 
-  enrich<T, Context>(): ModelOf<T, Context> {
-    const methods = [
-      'validate',
-      'transform',
-      'create',
-      'update',
-      'delete',
-      'getById',
-      'list',
-    ]
-    const withContext = _.chain(this)
-      .pick(methods)
-      .mapKeys(fn => (<any>fn).bind(this))
-      .value()
-    return Object.assign(this.dbModel, withContext) as any
+  withContext(context: Context) {
+    return {
+      validate: (input: T) => this.validate(input, context),
+      transform: (input: T) => this.transform(input, context),
+      create: (input: T) => this.create(input, context),
+      update: (_id: string, input: T) => this.update(_id, input, context),
+      remove: (_id: string) => this.remove(_id, context),
+      getById: (_id: string) => this.getById(_id, context),
+      list: () => this.list(context),
+    }
   }
 
   async validate(input: T, context: Context) {
@@ -74,7 +69,7 @@ export class ModelEnricher<T extends object, Context> {
     return this.transform(result!.toObject(), context)
   }
 
-  async delete(_id: string, context: Context) {
+  async remove(_id: string, context: Context) {
     const toBeRemoved = await this.dbModel.findById(_id)
     if (_.isNil(toBeRemoved)) throw new UserInputError(
       `${this.modelDefinition.name.toUpperCase()}_NOT_FOUND`

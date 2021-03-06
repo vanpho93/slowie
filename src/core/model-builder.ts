@@ -6,7 +6,7 @@ import { Hook } from './hook'
 import { TypeGenerator } from './type-generator'
 import { ModelEnricher } from './model-enricher'
 
-export class ModelBuilder<T, Context> {
+export class ModelBuilder<T extends object, Context> {
   constructor(private modelDefinition: IModelDefinition<Context>) { }
 
   private _dbModel: any
@@ -22,8 +22,15 @@ export class ModelBuilder<T, Context> {
       )
 
       const predefinedTypes = TypeGenerator.generate(this.modelDefinition)
-      Object.assign(this._dbModel, { hook: new Hook(), predefinedTypes })
-      new ModelEnricher(this._dbModel, this.modelDefinition).enrich()
+      const enricher = new ModelEnricher(this._dbModel, this.modelDefinition)
+      Object.assign(
+        this._dbModel,
+        {
+          hook: new Hook(),
+          predefinedTypes,
+          withContext: enricher.withContext.bind(enricher),
+        }
+      )
     }
 
     return this._dbModel

@@ -1,6 +1,5 @@
 import * as _ from 'lodash'
 import * as graphql from 'graphql'
-import { UserInputError } from 'apollo-server'
 import { EApiType, EDefaultApis } from '../../metadata'
 import { BaseApiGenerator } from '../base-api-generator'
 
@@ -19,10 +18,6 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, { _id }, context: any) {
-    const result = await this.dbModel.findById(_id)
-    if (_.isNil(result)) throw new UserInputError(
-      `${this.modelDefinition.name.toUpperCase()}_NOT_FOUND`
-    )
-    return this.transform(context, result.toObject())
+    return this.dbModel.withContext(context).getById(_id)
   }
 }

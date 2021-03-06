@@ -6,39 +6,19 @@ import { ApiGenerator } from './api-generator'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#resolve', async () => {
-    const beforeCreateHook = td.function()
-    const afterCreateHook = td.function()
-
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'transform', (context, value) => _.merge(context, value))
-    td.replace(generator, 'validate', _.identity)
-
-    td.replace(generator, 'dbModel', {
-      create(input: {}) {
-        return { toObject() { return _.merge({ _id: 'some_id' }, input) } }
+    const dbModel = {
+      withContext(context: any) {
+        return {
+          create: (input: {}) => {
+            return { context, input }
+          },
+        }
       },
-      hook: {
-        beforeCreateHooks: [beforeCreateHook],
-        afterCreateHooks: [afterCreateHook],
-      },
-    })
+    }
 
-    const context = <any>{ role: 'ADMIN' }
-    const input = { name: 'Brian' }
-
-    const output = await generator['resolve'](
-      TestUtils.NO_MATTER_VALUE('parent'),
-      { input },
-      context
-    )
-
-    expect(output)
-      .to.deep
-      .equal({ _id: 'some_id', name: 'Brian', role: 'ADMIN' })
-
-    const created = { toObject: td.matchers.anything() }
-    td.verify(beforeCreateHook(context, input))
-    td.verify(afterCreateHook(context, created, input))
+    const generator = new ApiGenerator(<any>dbModel, <any>'modelDefinition')
+    expect(await generator['resolve']('parent', { input: 'input' }, 'context'))
+      .to.deep.equal({ input: 'input', context: 'context' })
   })
 
   it('#getKey', () => {
@@ -51,6 +31,9 @@ describe(TestUtils.getTestTitle(__filename), () => {
       predefinedTypes: {
         OUTPUT: 'OUTPUT',
         CREATE_INPUT: 'CREATE_INPUT',
+      },
+      withContext: {
+
       },
     }
     const generator = new ApiGenerator(dbModel, <any>{ name: 'User' })

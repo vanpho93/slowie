@@ -15,14 +15,14 @@ export class Slowie<Context> {
 
   constructor(private config: { context: GetContextFunction<Context> }) {}
 
-  createModel<T>(modelDefinition: IModelDefinition<Context>): ModelOf<T, Context> {
+  createModel<T extends object>(modelDefinition: IModelDefinition<Context>): ModelOf<T, Context> {
     const builder = new ModelBuilder(modelDefinition)
     this._models[modelDefinition.name] = builder.getDbModel()
     this._apis.push(...builder.getGraphqlApis())
     return this._models[modelDefinition.name]
   }
 
-  getModel<T = any>(name: string): ModelOf<T, Context> {
+  getModel<T extends object>(name: string): ModelOf<T, Context> {
     if (_.isNil(this._models[name])) throw new Error(`Model ${name} not found.`)
     return this._models[name]
   }

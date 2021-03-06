@@ -17,7 +17,6 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
   }
 
   private async resolve(_parent, _input, context: any) {
-    const items = await this.dbModel.find({})
-    return items.map((item) => this.transform(context, item.toObject()))
+    return this.dbModel.withContext(context).list()
   }
 }

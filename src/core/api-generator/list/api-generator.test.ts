@@ -7,29 +7,19 @@ import { ApiGenerator } from './api-generator'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#resolve', async () => {
-    const generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-    td.replace(generator, 'transform', (context, value) => ({ ...context, ...value }))
-    td.replace(generator, 'dbModel', {
-      find() {
-        return [
-          { toObject() { return { _id: 'a', name: 'a' } } },
-          { toObject() { return { _id: 'b', name: 'b' } } },
-        ]
+    const dbModel = {
+      withContext(context: any) {
+        return {
+          list: () => {
+            return { context, fn: 'list' }
+          },
+        }
       },
-    })
+    }
 
-    const output = await generator['resolve'](
-      TestUtils.NO_MATTER_VALUE('parent'),
-      undefined,
-      <any> { role: 'ADMIN' }
-    )
-
-    expect(output)
-      .to.deep
-      .equal([
-        { _id: 'a', name: 'a', role: 'ADMIN' },
-        { _id: 'b', name: 'b', role: 'ADMIN' },
-      ])
+    const generator = new ApiGenerator(<any>dbModel, <any>'modelDefinition')
+    expect(await generator['resolve']('parent', {}, 'context'))
+      .to.deep.equal({ context: 'context', fn: 'list' })
   })
 
   it('#getKey', () => {

@@ -4,46 +4,24 @@ import * as td from 'testdouble'
 import { expect } from 'chai'
 import { TestUtils } from '../../../helpers'
 import { ApiGenerator } from './api-generator'
-import { UserInputError } from 'apollo-server'
 
 describe(TestUtils.getTestTitle(__filename), () => {
-  describe('#resolve', () => {
-    let generator: ApiGenerator<{}>
+  it('#resolve', () => {
+    const dbModel = {
+      withContext(context: any) {
+        return {
+          remove: (_id: string) => {
+            return { context, _id }
+          },
+        }
+      },
+    }
 
-    beforeEach(() => {
-      generator = new ApiGenerator(<any>{}, <any>{ name: 'User' })
-      td.replace(generator, 'transform', (context, value) => _.merge(context, value))
-    })
-
-    it('get successfully', async () => {
-      td.replace(generator, 'dbModel', {
-        findById(_id: string) {
-          return { toObject() { return { _id, name: 'Brian' } } }
-        },
-      })
-
-      const output = await generator['resolve'](
-        TestUtils.NO_MATTER_VALUE('parent'),
-        { _id: 'some_id' },
-        <any> { role: 'ADMIN' }
-      )
-      expect(output)
-        .to.deep
-        .equal({ _id: 'some_id', name: 'Brian', role: 'ADMIN' })
-    })
-
-    it('not found', async () => {
-      td.replace(generator, 'dbModel', {
-        findById(_id: string) { return null },
-      })
-
-      const output: UserInputError = await generator['resolve'](
-        TestUtils.NO_MATTER_VALUE('parent'),
-        TestUtils.NO_MATTER_VALUE('input'),
-        TestUtils.NO_MATTER_VALUE('context')
-      ).catch(error => error)
-      expect(output).to.be.an.instanceOf(UserInputError)
-      expect(output.message).to.equal('USER_NOT_FOUND')
+    const generator = new ApiGenerator(<any> dbModel, <any>{ name: 'User' })
+    generator['resolve']('parent', { _id: 'some_id' }, 'context')
+    expect(dbModel.withContext('context').remove('some_id')).to.deep.equal({
+      _id: 'some_id',
+      context: 'context',
     })
   })
 
