@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as td from 'testdouble'
 import { expect } from 'chai'
-import { UserInputError } from 'apollo-server'
+import { AuthenticationError, UserInputError } from 'apollo-server'
 import { TestUtils } from '../helpers'
 import { ModelEnricher } from './model-enricher'
 
@@ -132,26 +132,27 @@ describe(TestUtils.getTestTitle(__filename), () => {
       TestUtils.NO_MATTER_VALUE('DbModel'),
       <any> {
         schema: {
-          shouldRemain: {},
-          shouldChange: {
+          shouldSkip: {},
+          shouldCheck: {
             validate: ({ role }, value: string) => {
-              if (role === 'ADMIN') return
-              throw new UserInputError('User cannot change this field')
+              if (role !== 'ADMIN') throw new AuthenticationError('ONLY_ADMIN')
+              if (value === 'invalid')throw new UserInputError('INVALID_VALUE')
             },
           },
         },
       }
     )
 
-    const value = {
-      shouldRemain: 'constant',
-      shouldChange: 'change_to_abcd_if_role_is_guest',
-    }
+    const authError = await enricher.withContext({ role: 'GUEST' })['validate']({ shouldCheck: 'some_value' }).catch(error => error)
+    expect(authError.message).to.equal('ONLY_ADMIN')
 
-    const error = await enricher.withContext({ role: 'GUEST' })['validate'](value).catch(error => error)
-    expect(error.message).to.equal('User cannot change this field')
+    const fieldError = await enricher.withContext({ role: 'ADMIN' })['validate']({ shouldCheck: 'invalid' }).catch(error => error)
+    expect(fieldError.message).to.equal('INVALID_VALUE')
 
-    enricher.withContext({ role: 'ADMIN' })['validate'](value)
+    enricher.withContext({ role: 'ADMIN' })['validate']({
+      shouldSkip: 'nothing',
+      shouldCheck: 'valid',
+    })
   })
 
   it('#list', async () => {
