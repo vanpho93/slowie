@@ -17,15 +17,18 @@ export interface IValidateFunction<Value, Context> {
   (context: Context, value: Value): void | Promise<void>
 }
 
-type GraphQLField = graphql.GraphQLFieldConfig<any, any> | null
+export type GraphQLField = graphql.GraphQLFieldConfig<any, any>
+export type GraphQLInputField = graphql.GraphQLInputFieldConfig
 
 export interface IField<Context, Value = any> {
   graphql: {
-    default?: GraphQLField
-    get?: GraphQLField
-    create?: graphql.GraphQLInputFieldConfig | null
-    update?: graphql.GraphQLInputFieldConfig | null
-    list?: GraphQLField
+    default?: GraphQLField | null
+    read?: GraphQLField | null
+    get?: GraphQLField | null
+    write?: GraphQLInputField | null
+    create?: GraphQLInputField | null
+    update?: GraphQLInputField | null
+    list?: GraphQLField | null
   }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>

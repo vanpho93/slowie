@@ -9,11 +9,17 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const apiGenerator = new TypeGenerator(
       <any> {
         schema: {
-          field: {
+          firstField: {
             graphql: {
-              default: 'string',
-              get: 'number',
+              default: 'from_default',
+              read: null,
+              get: 'from_get',
               create: null,
+            },
+          },
+          secondField: {
+            graphql: {
+              list: 'from_list',
             },
           },
         },
@@ -21,19 +27,22 @@ describe(TestUtils.getTestTitle(__filename), () => {
     )
 
     expect(apiGenerator['getFields']('get'))
-      .to.deep.equal({ field: 'number' })
+      .to.deep.equal({ firstField: 'from_get' })
+
+    expect(apiGenerator['getFields']('list'))
+      .to.deep.equal({ secondField: 'from_list' }) // read is null
 
     expect(apiGenerator['getFields']('update'))
-      .to.deep.equal({ field: 'string' })
+      .to.deep.equal({ firstField: 'from_default' })
 
     expect(apiGenerator['getFields']('create'))
-      .to.deep.equal({})
+      .to.deep.equal({}) // create is null
   })
 
   it('#getOutputType', () => {
     td.replace(
       TypeGenerator,
-      <any> 'setOutputType'
+      <any> 'setType'
     )
     td.replace(
       TypeGenerator.prototype,
@@ -51,18 +60,18 @@ describe(TestUtils.getTestTitle(__filename), () => {
     )
 
     const outputType = typeGenerator['getOutputType']()
-    td.verify(TypeGenerator['setOutputType']('User', outputType))
+    td.verify(TypeGenerator['setType']('User', outputType))
     expect(
       outputType.getFields().age
     ).to.deep.include({ name: 'age', type: graphql.GraphQLInt })
   })
 
   it('get and set output type', () => {
-    expect(TypeGenerator.getCachedOutputType('User')).to.deep.equal(TypeGenerator['DEFAULT_TYPE'])
-    expect(TypeGenerator['setOutputType']('User', <any> 'AN_OUTPUT_TYPE'))
-    expect(TypeGenerator.getCachedOutputType('User')).to.deep.equal('AN_OUTPUT_TYPE')
+    expect(TypeGenerator.getCachedType('User')).to.deep.equal(TypeGenerator['DEFAULT_TYPE'])
+    expect(TypeGenerator['setType']('User', <any> 'AN_OUTPUT_TYPE'))
+    expect(TypeGenerator.getCachedType('User')).to.deep.equal('AN_OUTPUT_TYPE')
 
-    expect(() => TypeGenerator['setOutputType']('User', <any>'AN_OUTPUT_TYPE'))
+    expect(() => TypeGenerator['setType']('User', <any>'AN_OUTPUT_TYPE'))
       .throws('User declared twice')
   })
 

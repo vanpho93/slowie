@@ -12,7 +12,7 @@ export class ModelEnricher<T extends object, Context> {
 
   withContext(context: Context) {
     return {
-      validate: (input: T) => this.validate(input, context),
+      validate: (input: Partial<T>) => this.validate(input, context),
       transform: (input: T) => this.transform(input, context),
       create: (input: T) => this.create(input, context),
       update: (_id: string, input: T) => this.update(_id, input, context),
@@ -22,7 +22,7 @@ export class ModelEnricher<T extends object, Context> {
     }
   }
 
-  async validate(input: T, context: Context) {
+  async validate(input: Partial<T>, context: Context) {
     for (const key of Object.keys(input)) {
       const validateFunction = _.get(this.modelDefinition.schema[key], 'validate')
       if (validateFunction) await validateFunction(context, input[key])
