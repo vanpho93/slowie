@@ -70,7 +70,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const generator = new TypeGenerator(<any>{ name: 'User' })
     td.replace(generator, 'getFields', () => ({ _id: {}, name: {} }))
     const config = generator['getCreateInputType']().toConfig()
-    expect(config.name).to.equal('UserCreateInput')
+    expect(config.name).to.equal('CreateUserInput')
     expect(config.fields.name).to.be.an.instanceOf(Object)
   })
 
@@ -78,7 +78,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const generator = new TypeGenerator(<any>{ name: 'User' })
     td.replace(generator, 'getFields', () => ({ _id: {}, name: {} }))
     const config = generator['getUpdateInputType']().toConfig()
-    expect(config.name).to.equal('UserUpdateInput')
+    expect(config.name).to.equal('UpdateUserInput')
     expect(config.fields.name).to.be.an.instanceOf(Object)
   })
 

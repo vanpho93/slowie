@@ -56,14 +56,14 @@ export class TypeGenerator {
 
   private getCreateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
-      name: `${this.modelDefinition.name}CreateInput`,
+      name: `Create${this.modelDefinition.name}Input`,
       fields: () => this.getFields('create'),
     })
   }
 
   private getUpdateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
-      name: `${this.modelDefinition.name}UpdateInput`,
+      name: `Update${this.modelDefinition.name}Input`,
       fields: () => this.getFields('update'),
     })
   }
