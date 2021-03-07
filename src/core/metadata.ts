@@ -23,10 +23,9 @@ export interface IField<Context, Value = any> {
   graphql: {
     default?: GraphQLField
     get?: GraphQLField
-    create?: GraphQLField
-    update?: GraphQLField
+    create?: graphql.GraphQLInputFieldConfig | null
+    update?: graphql.GraphQLInputFieldConfig | null
     list?: GraphQLField
-    remove?: GraphQLField
   }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>
