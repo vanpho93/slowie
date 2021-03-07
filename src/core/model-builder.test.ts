@@ -12,10 +12,14 @@ describe(TestUtils.getTestTitle(__filename), () => {
       schema: {
         email: {
           db: { type: String },
-          graphql: { type: graphql.GraphQLString },
+          graphql: {
+            get: { type: graphql.GraphQLString },
+          },
         },
         ref: {
-          graphql: { type: graphql.GraphQLString },
+          graphql: {
+            get: { type: graphql.GraphQLString },
+          },
         },
       },
     })

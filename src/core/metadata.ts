@@ -17,13 +17,20 @@ export interface IValidateFunction<Value, Context> {
   (context: Context, value: Value): void | Promise<void>
 }
 
+type GraphQLField = graphql.GraphQLFieldConfig<any, any> | null
+
 export interface IField<Context, Value = any> {
-  graphql: graphql.GraphQLFieldConfig<any, any>
+  graphql: {
+    default?: GraphQLField
+    get?: GraphQLField
+    create?: GraphQLField
+    update?: GraphQLField
+    list?: GraphQLField
+    remove?: GraphQLField
+  }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>
   validate?: IValidateFunction<Value, Context>
-  hideFromReadApis?: boolean
-  hideFromWriteApis?: boolean
 }
 
 export enum EDefaultApis {
@@ -47,11 +54,6 @@ export enum EApiType {
   MUTATION = 'MUTATION',
 }
 
-export enum EFieldAction {
-  READ = 'READ',
-  WRITE = 'WRITE',
-}
-
 export interface IApiGenerator {
   generate(): graphql.GraphQLFieldConfigMap<any, any>
   type: EApiType
@@ -60,6 +62,7 @@ export interface IApiGenerator {
 
 export interface IPredefinedTypes {
   OUTPUT: graphql.GraphQLObjectType
+  OUTPUT_IN_LIST: graphql.GraphQLObjectType
   CREATE_INPUT: graphql.GraphQLInputObjectType
   UPDATE_INPUT: graphql.GraphQLInputObjectType
 }

@@ -14,7 +14,9 @@ describe(TestUtils.getTestTitle(__filename), () => {
       name: 'TestUser',
       schema: {
         email: {
-          graphql: { type: graphql.GraphQLString },
+          graphql: {
+            default: { type: graphql.GraphQLString },
+          },
           db: { type: String },
         },
       },

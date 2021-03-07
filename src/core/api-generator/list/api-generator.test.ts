@@ -31,7 +31,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const resolve = () => 'resolve'
     const dbModel = <any>{
       predefinedTypes: {
-        OUTPUT: graphql.GraphQLString,
+        OUTPUT_IN_LIST: graphql.GraphQLString,
       },
     }
     const generator = new ApiGenerator(dbModel, <any>{ name: 'User' })

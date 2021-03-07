@@ -2,22 +2,22 @@ import * as _ from 'lodash'
 import * as graphql from 'graphql'
 import {
   IModelDefinition,
-  EFieldAction,
   IPredefinedTypes,
+  IField,
 } from '../core/metadata'
 
 export class TypeGenerator {
   constructor(protected modelDefinition: IModelDefinition<any>) { }
 
-  private getFields(fieldAction: EFieldAction): _.Dictionary<graphql.GraphQLFieldConfig<any, any>> {
-    const filterOption = fieldAction === EFieldAction.READ ? { hideFromReadApis: true } : { hideFromWriteApis: true }
-    const hiddenFields = _.chain(this.modelDefinition.schema)
-      .map((value, key) => ({ key, ...value }))
-      .filter(filterOption)
-      .map('key')
-      .value()
+  private getFields(fieldName: keyof IField<any, any>['graphql']): _.Dictionary<graphql.GraphQLFieldConfig<any, any>> {
 
-    return _.chain(this.modelDefinition.schema).omit(hiddenFields).mapValues('graphql').value()
+    return _.chain(this.modelDefinition.schema)
+      .mapValues(field => {
+        if (_.isUndefined(field.graphql[fieldName])) return field.graphql.default
+        return field.graphql[fieldName]
+      })
+      .omitBy(_.isNil)
+      .value() as any
   }
 
   private static _outputTypes = {}
@@ -40,28 +40,37 @@ export class TypeGenerator {
   private getOutputType(): graphql.GraphQLObjectType {
     const type = new graphql.GraphQLObjectType({
       name: this.modelDefinition.name,
-      fields: () => this.getFields(EFieldAction.READ),
+      fields: () => this.getFields('get'),
     })
     TypeGenerator.setOutputType(this.modelDefinition.name, type)
+    return type
+  }
+
+  private getOutputInListType(): graphql.GraphQLObjectType {
+    const type = new graphql.GraphQLObjectType({
+      name: `${this.modelDefinition.name}Item`,
+      fields: () => this.getFields('list'),
+    })
     return type
   }
 
   private getCreateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
       name: `${this.modelDefinition.name}CreateInput`,
-      fields: () => _.omit(this.getFields(EFieldAction.WRITE), '_id'),
+      fields: () => this.getFields('create'),
     })
   }
 
   private getUpdateInputType() {
     return new graphql.GraphQLInputObjectType(<any>{
       name: `${this.modelDefinition.name}UpdateInput`,
-      fields: () => _.omit(this.getFields(EFieldAction.WRITE), '_id'),
+      fields: () => this.getFields('update'),
     })
   }
 
   private generate() {
     return {
+      OUTPUT_IN_LIST: this.getOutputInListType(),
       OUTPUT: this.getOutputType(),
       CREATE_INPUT: this.getCreateInputType(),
       UPDATE_INPUT: this.getUpdateInputType(),
