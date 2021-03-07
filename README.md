@@ -7,27 +7,72 @@ A new framwork for `graphql` - `mongodb` - `redis` - `kakfa` focus on speeding u
 
 You define a model, all APIs will be generated in `graphql`. Instead of doing tedious jobs in many files (model, service, controller, api docs), you just define a model in a single file, all APIs will be ready. In the future, we can add more and more options, therefore making the code more reusable and fun.
 
-## Development env
+## Basic usage
 
-Step 1: Copy env file
+```typescript
+import { Slowie, graphql } from 'slowie'
+
+// step 1: Define context interface
+export interface IContext {
+  role: string
+}
+
+// step 2: Init app and define `context` method, showing how to get context from `req`
+export const app = new Slowie<IContext>({
+  // How to get context from the request
+  context: async (req) => ({ role: req.headers.role || 'GUEST' }),
+})
+
+// step 3: Create a model
+interface IUser {
+  email: string
+  countryId: string
+}
+
+export const User = app.createModel<IUser>({
+  name: 'User',
+  schema: {
+    email: {
+      graphql: {
+        default: { type: graphql.GraphQLString },
+        create: { type: graphql.GraphQLNonNull(graphql.GraphQLString) },
+        update: null,
+      },
+      db: { type: String, required: true, unique: true },
+    },
+    countryId: {
+      graphql: {
+        default: { type: graphql.GraphQLString },
+      },
+      db: { type: String },
+    },
+  },
+})
+
+User.createIndexes()
+
+// step 4: Connect database
+app.mongoose.connect(
+  'mongodb://localhost:27017/slowie',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+  }
+)
+
+// step 5: Start server
+app.getServer().listen(
+  3000,
+  () => console.log('Play server started at http://localhost:3000')
+)
+
 
 ```
-cp sample.env .env
-```
-> A mongodb instance running is required, you can change database url in `.env` file
 
-Step 2: Install dependencies
-```
-yarn install
-```
-
-Step 3: Run
-```
-yarn start
-```
-
-Step 4: Open http://localhost:4000 to play with the APIs
+After run this, you can open `http://localhost:3000` and interact with all generated apis
 
 ## Example
 
-Take a look at `user.ts`
+A sample project can be found [here](https://github.com/vanpho93/slowie-example)
