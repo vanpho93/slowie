@@ -1,9 +1,9 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
-import { EApiType, IApiGenerator } from './metadata'
+import { EApiType, IApi } from './metadata'
 
 export class SchemaLoader {
-  public static getSchemaFromApiGenerators(apiGenerators: IApiGenerator[]) {
+  public static getSchemaFromApiGenerators(apiGenerators: IApi[]) {
     const query = new graphql.GraphQLObjectType({
       name: 'Query',
       fields: this.getFieldsByApiType(apiGenerators, EApiType.QUERY),
@@ -20,10 +20,10 @@ export class SchemaLoader {
     })
   }
 
-  private static getFieldsByApiType(apiGenerators: IApiGenerator[], apiType: EApiType) {
+  private static getFieldsByApiType(apiGenerators: IApi[], apiType: EApiType) {
     return _.chain(apiGenerators)
       .filter({ type: apiType })
-      .map(generator => generator.generate())
+      .map(generator => generator.endpoint)
       .reduce(_.merge)
       .value()
   }

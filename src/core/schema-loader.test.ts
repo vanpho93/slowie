@@ -1,4 +1,3 @@
-// tslint:disable: no-unused-expression
 import * as td from 'testdouble'
 import { expect } from 'chai'
 import { TestUtils } from '../helpers'
@@ -8,9 +7,9 @@ import { EApiType } from './metadata'
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getFieldsByApiType', () => {
     const apis: any = [
-      { type: EApiType.MUTATION, generate() { return { updateUser: {} } } },
-      { type: EApiType.MUTATION, generate() { return { createUser: {} } } },
-      { type: EApiType.QUERY, generate() { return { getUser: {} } } },
+      { type: EApiType.MUTATION, endpoint: { updateUser: {} } },
+      { type: EApiType.MUTATION, endpoint: { createUser: {} } },
+      { type: EApiType.QUERY, endpoint: { getUser: {} } },
     ]
     const mutationFields = SchemaLoader['getFieldsByApiType'](apis, EApiType.MUTATION)
     expect(mutationFields).to.deep.equal({

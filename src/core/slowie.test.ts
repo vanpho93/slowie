@@ -33,11 +33,17 @@ describe(TestUtils.getTestTitle(__filename), () => {
   it('#createModel', () => {
     const app = new Slowie(<any>{})
     td.replace(ModelBuilder.prototype, 'getDbModel', () => 'Model')
-    td.replace(ModelBuilder.prototype, 'getGraphqlApis', () => ['api1', 'api2'])
+    td.replace(ModelBuilder.prototype, 'getGraphqlApis', () => [
+      { generate: () => 'api1', type: 'query' },
+      { generate: () => 'api2', type: 'mutation' },
+    ])
 
     app.createModel(<any>{ name: 'User' })
     expect(app['_models']).to.deep.equal({ User: 'Model' })
-    expect(app['_apis']).to.deep.equal(['api1', 'api2'])
+    expect(app['_apis']).to.deep.equal([
+      { endpoint: 'api1', type: 'query' },
+      { endpoint: 'api2', type: 'mutation' },
+    ])
   })
 
   it('#getModel', () => {

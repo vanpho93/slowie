@@ -56,8 +56,15 @@ export enum EApiType {
   MUTATION = 'MUTATION',
 }
 
+export type IApiEndpoint = graphql.GraphQLFieldConfigMap<any, any>
+
+export interface IApi {
+  endpoint: IApiEndpoint
+  type: EApiType
+}
+
 export interface IApiGenerator {
-  generate(): graphql.GraphQLFieldConfigMap<any, any>
+  generate(): IApiEndpoint
   type: EApiType
   defaultApiType: EDefaultApis
 }
