@@ -1,6 +1,5 @@
 import * as graphql from 'graphql'
 import * as _ from 'lodash'
-import { customAlphabet } from 'nanoid'
 
 interface IQueryField {
   field: string,
@@ -9,19 +8,61 @@ interface IQueryField {
   required?: boolean
 }
 
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 8)
+const sortDirection = new graphql.GraphQLEnumType({
+  name: 'SortDirection',
+  values: {
+    asc: { value: 'asc' },
+    desc: { value: 'desc' },
+  },
+})
 
-export class QueryInputTypeBuilder {
+export class PaginateApiArgsBuilder {
   private queryFields: IQueryField[] = []
+  private name = 'UNKNOWN_TYPE'
+  private sortableFields: string[] = []
 
-  build() {
+  setName(name: string) {
+    this.name = name
+    return this
+  }
+
+  build(): graphql.GraphQLFieldConfigArgumentMap {
+    return _.pickBy(
+      {
+        offset: { type: graphql.GraphQLInt, defaultValue: 0 },
+        limit: { type: graphql.GraphQLInt, defaultValue: 10 },
+        where: this.getWhere(),
+        sort: this.getSort(),
+      },
+      _.identity
+    ) as any
+  }
+
+  getWhere() {
+    if (_.isEmpty(this.queryFields)) return null
     const required = _.some(this.queryFields, 'required')
     const type = new graphql.GraphQLInputObjectType({
-      name: `GeneratedQueryType_${nanoid()}`,
+      name: `${this.name}Where`,
       fields: this.getFields(),
     })
     if (required) return { type: graphql.GraphQLNonNull(type) }
     return { type }
+  }
+
+  getSort() {
+    if (_.isEmpty(this.sortableFields)) return null
+    const type = new graphql.GraphQLInputObjectType({
+      name: `${this.name}Sort`,
+      fields: {
+        email: { type: sortDirection },
+      },
+    })
+    return { type }
+  }
+
+  addSortableFields(fields: string[]) {
+    this.sortableFields = _.uniq([...fields, ...this.sortableFields])
+    return this
   }
 
   addQueryField(queryField: IQueryField) {
@@ -61,7 +102,7 @@ export class QueryInputTypeBuilder {
       .value()
 
     return new graphql.GraphQLInputObjectType({
-      name: `QueryQueryTypeForField${_.capitalize(field)}_${nanoid()}`,
+      name: `${this.name}QueryFor${_.capitalize(field)}`,
       fields,
     })
   }

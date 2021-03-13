@@ -3,18 +3,18 @@ import * as graphql from 'graphql'
 import { TestUtils } from '../helpers'
 import * as _ from 'lodash'
 import { expect } from 'chai'
-import { QueryInputTypeBuilder } from './query-input-type-builder'
+import { PaginateApiArgsBuilder } from './paginate-api-args-builder'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#build', () => {
-    const { type } = new QueryInputTypeBuilder()
+    const { type } = new PaginateApiArgsBuilder()
       .build()
 
     expect(type).instanceOf(graphql.GraphQLInputObjectType)
   })
 
   it('#addQueryField', () => {
-    const builder = new QueryInputTypeBuilder()
+    const builder = new PaginateApiArgsBuilder()
 
     builder
       .addQueryField({
@@ -34,7 +34,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
   })
 
   it('#getFields', async () => {
-    const builder = new QueryInputTypeBuilder()
+    const builder = new PaginateApiArgsBuilder()
     td.replace(builder, 'queryFields', [
       {
         field: 'email',
@@ -60,7 +60,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
   })
 
   it('#getInputTypeByFields', () => {
-    const builder = new QueryInputTypeBuilder()
+    const builder = new PaginateApiArgsBuilder()
     const inputType = builder['getInputTypeByFields']([
       {
         field: 'email',
