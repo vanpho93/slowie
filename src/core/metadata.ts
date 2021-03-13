@@ -47,6 +47,7 @@ export interface IModelDefinition<Context> {
   name: string
   schema: ISchema<Context>
   hideDefaultApis?: EDefaultApis[]
+  skipTimestamp?: boolean
 }
 
 export type ISchema<Context> = _.Dictionary<IField<Context>>
