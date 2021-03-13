@@ -6,7 +6,6 @@ import { Hook } from './hook'
 import { TypeGenerator } from './type-generator'
 import { ModelEnricher } from './model-enricher'
 import * as mongoosePaginate from 'mongoose-paginate-v2'
-import * as mongooseTimestamp from 'mongoose-timestamp'
 
 export class ModelBuilder<T extends object, Context> {
   constructor(private modelDefinition: IModelDefinition<Context>) { }
@@ -18,9 +17,11 @@ export class ModelBuilder<T extends object, Context> {
       _.mapValues(this.modelDefinition.schema, 'db'),
       _.isNil
     )
-    const schema = new mongoose.Schema(schemaDefinition)
+    const schema = new mongoose.Schema(
+      schemaDefinition,
+      { timestamps: !this.modelDefinition.skipTimestamp }
+    )
     schema.plugin(mongoosePaginate)
-    if (!this.modelDefinition.skipTimestamp) mongoose.plugin(mongooseTimestamp)
 
     this._dbModel = mongoose.model<T & mongoose.Document>(
       this.modelDefinition.name,

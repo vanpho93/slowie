@@ -27,14 +27,14 @@ export class PaginateApiArgsBuilder {
   }
 
   build(): graphql.GraphQLFieldConfigArgumentMap {
-    return _.pickBy(
+    return _.omitBy(
       {
         offset: { type: graphql.GraphQLInt, defaultValue: 0 },
         limit: { type: graphql.GraphQLInt, defaultValue: 10 },
         where: this.getWhere(),
         sort: this.getSort(),
       },
-      _.identity
+      _.isNil
     ) as any
   }
 
