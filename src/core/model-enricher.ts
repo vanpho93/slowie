@@ -113,7 +113,7 @@ export class ModelEnricher<T extends object, Context> {
     const result = await this.dbModel.paginate(query, options)
     return {
       ...result,
-      docs: result.docs.map((item) => this.transform(item, context)),
+      docs: result.docs.map((item) => this.transform(item.toObject(), context)),
     }
   }
 }

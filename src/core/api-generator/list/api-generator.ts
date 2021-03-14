@@ -1,4 +1,4 @@
-import { graphql } from 'index'
+import * as  graphql from 'graphql'
 import * as _ from 'lodash'
 import { EApiType, EDefaultApis } from '../../metadata'
 import { BaseApiGenerator } from '../base-api-generator'
@@ -9,8 +9,11 @@ export class ApiGenerator<T extends object> extends BaseApiGenerator<T> {
 
   getKey() { return `get${this.modelDefinition.name}s` }
 
-  protected getArgs(): graphql.GraphQLFieldConfigArgumentMap | undefined {
-    return undefined
+  protected getArgs(): graphql.GraphQLFieldConfigArgumentMap {
+    return {
+      offset: { type: graphql.GraphQLInt, defaultValue: 0 },
+      limit: { type: graphql.GraphQLInt, defaultValue: 10 },
+    }
   }
 
   protected getQueryObjectFromInput(input: any): any {
