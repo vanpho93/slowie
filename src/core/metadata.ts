@@ -73,7 +73,7 @@ export interface IApiGenerator {
 
 export interface IPredefinedTypes {
   OUTPUT: graphql.GraphQLObjectType
-  OUTPUT_IN_LIST: graphql.GraphQLObjectType
+  PAGEGINATED_LIST: graphql.GraphQLObjectType
   CREATE_INPUT: graphql.GraphQLInputObjectType
   UPDATE_INPUT: graphql.GraphQLInputObjectType
 }

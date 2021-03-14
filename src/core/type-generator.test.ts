@@ -102,7 +102,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
         OUTPUT: 1,
         CREATE_INPUT: 2,
         UPDATE_INPUT: 3,
-        OUTPUT_IN_LIST: 4,
+        PAGEGINATED_LIST: 4,
       })
   })
 })

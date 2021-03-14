@@ -79,6 +79,20 @@ export class TypeGenerator {
     return type
   }
 
+  private getPaginatedListType() {
+    const itemType = this.getOutputInListType()
+    const name = `${this.modelDefinition.name}PaginatedList`
+    return new graphql.GraphQLObjectType({
+      name,
+      fields: {
+        docs: { type: graphql.GraphQLList(itemType) },
+        totalDocs: { type: graphql.GraphQLInt },
+        hasPrevPage: { type: graphql.GraphQLBoolean },
+        hasNextPage: { type: graphql.GraphQLBoolean },
+      },
+    })
+  }
+
   private getCreateInputType() {
     const name = `Create${this.modelDefinition.name}Input`
     const type = new graphql.GraphQLInputObjectType(<any>{
@@ -100,7 +114,7 @@ export class TypeGenerator {
 
   private generate() {
     return {
-      OUTPUT_IN_LIST: this.getOutputInListType(),
+      PAGEGINATED_LIST: this.getPaginatedListType(),
       OUTPUT: this.getOutputType(),
       CREATE_INPUT: this.getCreateInputType(),
       UPDATE_INPUT: this.getUpdateInputType(),
