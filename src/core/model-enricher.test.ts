@@ -259,4 +259,40 @@ describe(TestUtils.getTestTitle(__filename), () => {
       expect(output.message).to.equal('USER_NOT_FOUND')
     })
   })
+
+  it('#paginate', async () => {
+    const enricher = new ModelEnricher(
+      <any>{ paginate: td.function() },
+      <any>{ name: 'User' }
+    )
+    td.replace(enricher, 'transform', (context, value) => ({ ...context, ...value }))
+
+    const context = { role: 'ADMIN' }
+    const query = { email: 'abc@gmail.com' }
+    const option = { limit: 10 }
+
+    td
+      .when(enricher.paginate(query, option, context))
+      .thenResolve({
+        docs: [
+          { a: 1 },
+          { a: 2 },
+        ],
+        totalDocs: 20,
+      })
+
+    const output = await enricher
+      .withContext(context)
+      .paginate(query, option)
+
+    expect(output)
+      .to.deep
+      .equal({
+        docs: [
+          { a: 1, role: 'ADMIN' },
+          { a: 2, role: 'ADMIN' },
+        ],
+        totalDocs: 20,
+      })
+  })
 })

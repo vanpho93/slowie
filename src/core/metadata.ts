@@ -5,6 +5,7 @@ import {
   Schema,
   SchemaTypeOpts,
   SchemaType,
+  PaginateModel,
 } from 'mongoose'
 import { Hook } from './hook'
 import { ModelEnricher } from './model-enricher'
@@ -80,4 +81,5 @@ export interface IPredefinedTypes {
 export type ModelOf<T extends object, Context> = Model<T & Document, {}> &
   { hook: Hook<T, Context> } &
   { predefinedTypes: IPredefinedTypes } &
-  { withContext: ModelEnricher<T, Context>['withContext'] }
+  { withContext: ModelEnricher<T, Context>['withContext'] } &
+  PaginateModel<T & Document>

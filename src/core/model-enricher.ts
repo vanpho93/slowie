@@ -6,7 +6,9 @@ import { IModelDefinition } from './metadata'
 
 export class ModelEnricher<T extends object, Context> {
   constructor(
-    private dbModel: mongoose.Model<T & mongoose.Document> & { hook: Hook<T, Context> },
+    private dbModel: mongoose.Model<T & mongoose.Document> &
+      { hook: Hook<T, Context> } &
+      mongoose.PaginateModel<T & mongoose.Document>,
     private modelDefinition: IModelDefinition<Context>
   ) { }
 
@@ -19,6 +21,10 @@ export class ModelEnricher<T extends object, Context> {
       remove: (_id: string) => this.remove(_id, context),
       getById: (_id: string) => this.getById(_id, context),
       list: () => this.list(context),
+      paginate: (
+        query: mongoose.FilterQuery<T & mongoose.Document>,
+        options: mongoose.PaginateOptions
+      ) => this.paginate(query, options, context),
     }
   }
 
@@ -97,5 +103,17 @@ export class ModelEnricher<T extends object, Context> {
   async list(context: Context) {
     const items = await this.dbModel.find({})
     return items.map((item) => this.transform(item.toObject(), context))
+  }
+
+  async paginate(
+    query: mongoose.FilterQuery<T & mongoose.Document>,
+    options: mongoose.PaginateOptions,
+    context: Context
+  ) {
+    const result = await this.dbModel.paginate(query, options)
+    return {
+      ...result,
+      docs: result.docs.map((item) => this.transform(item, context)),
+    }
   }
 }
