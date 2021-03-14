@@ -6,6 +6,7 @@ import { expect } from 'chai'
 import { Slowie } from './slowie'
 import { SchemaLoader } from './schema-loader'
 import { ModelBuilder } from './model-builder'
+import { EApiType } from './metadata'
 
 describe(TestUtils.getTestTitle(__filename), () => {
   it('#getServer', async () => {
@@ -53,5 +54,14 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
     expect(() => Slowie.prototype.getModel('NotExists'))
       .to.throw('Model NotExists not found.')
+  })
+
+  it('#addApi', () => {
+    const apis = []
+    td.replace(Slowie.prototype, '_apis', apis);
+    (<any>Slowie.prototype.addApi)('getX', '100', EApiType.QUERY)
+    expect(apis).to.deep.equal([
+      { endpoint: { getX: '100' }, type: EApiType.QUERY },
+    ])
   })
 })

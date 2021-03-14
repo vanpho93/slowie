@@ -1,7 +1,8 @@
 import * as _ from 'lodash'
 import * as mongoose from 'mongoose'
+import * as graphql from 'graphql'
 import { ApolloServer } from 'apollo-server'
-import { EApiType, IApi, IApiEndpoint, IModelDefinition, ModelOf } from './metadata'
+import { EApiType, IApi, IModelDefinition, ModelOf } from './metadata'
 import { ModelBuilder } from './model-builder'
 import { SchemaLoader } from './schema-loader'
 
@@ -35,8 +36,12 @@ export class Slowie<Context> {
     })
   }
 
-  addApi(apiEndpoint: IApiEndpoint, type: EApiType) {
-    this._apis.push({ endpoint: apiEndpoint, type })
+  addApi<TSource = any>(
+    apiName: string,
+    fieldConfig: graphql.GraphQLFieldConfig<TSource, Context>,
+    type: EApiType
+  ) {
+    this._apis.push({ endpoint: { [apiName]: fieldConfig }, type })
   }
 
   readonly mongoose = mongoose

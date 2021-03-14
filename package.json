@@ -61,7 +61,8 @@
     "all": true,
     "check-coverage": true,
     "exclude": [
-      "src/**/*.test.ts"
+      "src/**/*.test.ts",
+      "src/play/*"
     ],
     "branches": 100,
     "lines": 100,

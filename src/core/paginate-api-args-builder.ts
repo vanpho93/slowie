@@ -8,7 +8,7 @@ interface IQueryField {
   required?: boolean
 }
 
-const sortDirection = new graphql.GraphQLEnumType({
+export const sortDirection = new graphql.GraphQLEnumType({
   name: 'SortDirection',
   values: {
     asc: { value: 'asc' },
@@ -20,6 +20,7 @@ export class PaginateApiArgsBuilder {
   private queryFields: IQueryField[] = []
   private name = 'UNKNOWN_TYPE'
   private sortableFields: string[] = []
+  private defaultLimit = 10
 
   setName(name: string) {
     this.name = name
@@ -30,12 +31,17 @@ export class PaginateApiArgsBuilder {
     return _.omitBy(
       {
         offset: { type: graphql.GraphQLInt, defaultValue: 0 },
-        limit: { type: graphql.GraphQLInt, defaultValue: 10 },
+        limit: { type: graphql.GraphQLInt, defaultValue: this.defaultLimit },
         where: this.getWhere(),
         sort: this.getSort(),
       },
       _.isNil
     ) as any
+  }
+
+  setDefaultLimit(limit: number) {
+    this.defaultLimit = limit
+    return this
   }
 
   getWhere() {
@@ -49,19 +55,20 @@ export class PaginateApiArgsBuilder {
     return { type }
   }
 
-  getSort() {
+  private getSort() {
     if (_.isEmpty(this.sortableFields)) return null
+    const fields = this.sortableFields
+      .map(field => ({ [field]: { type: sortDirection } }))
+      .reduce(_.merge)
     const type = new graphql.GraphQLInputObjectType({
       name: `${this.name}Sort`,
-      fields: {
-        email: { type: sortDirection },
-      },
+      fields: fields,
     })
     return { type }
   }
 
   addSortableFields(fields: string[]) {
-    this.sortableFields = _.uniq([...fields, ...this.sortableFields])
+    this.sortableFields = _.uniq([...this.sortableFields, ...fields])
     return this
   }
 
@@ -98,7 +105,7 @@ export class PaginateApiArgsBuilder {
         const operatorType = operatorConfigs[operator]
         return { [operator]: { type: required ? graphql.GraphQLNonNull(operatorType) : operatorType } }
       })
-      .reduce((a, b) => ({ ...a, ...b }))
+      .reduce(_.merge)
       .value()
 
     return new graphql.GraphQLInputObjectType({
