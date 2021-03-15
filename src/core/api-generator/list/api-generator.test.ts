@@ -10,7 +10,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const dbModel = {
       withContext(context: any) {
         return {
-          list: () => {
+          paginate: () => {
             return { context, fn: 'list' }
           },
         }
@@ -40,7 +40,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     const api = generator.getApi()
     expect(api).to.deep
       .include({
-        type: graphql.GraphQLList(graphql.GraphQLString),
+        type: graphql.GraphQLString,
       })
 
     expect(api.resolve()).to.equal('resolve')

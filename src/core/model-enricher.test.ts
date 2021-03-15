@@ -275,8 +275,8 @@ describe(TestUtils.getTestTitle(__filename), () => {
       .when(enricher.paginate(query, option, context))
       .thenResolve({
         docs: [
-          { a: 1 },
-          { a: 2 },
+          { toObject() { return { a: 1 } } },
+          { toObject() { return { a: 2 } } },
         ],
         totalDocs: 20,
       })

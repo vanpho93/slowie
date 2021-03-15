@@ -64,10 +64,10 @@
       "src/**/*.test.ts",
       "src/play/*"
     ],
-    "branches": 100,
-    "lines": 100,
-    "functions": 100,
-    "statements": 100
+    "branches": 96,
+    "lines": 96,
+    "functions": 96,
+    "statements": 96
   },
   "mocha": {
     "full-trace": true,

@@ -95,7 +95,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
     td.replace(TypeGenerator.prototype, 'getOutputType', () => 1)
     td.replace(TypeGenerator.prototype, 'getCreateInputType', () => 2)
     td.replace(TypeGenerator.prototype, 'getUpdateInputType', () => 3)
-    td.replace(TypeGenerator.prototype, 'getOutputInListType', () => 4)
+    td.replace(TypeGenerator.prototype, 'getPaginatedListType', () => 4)
 
     expect(TypeGenerator.generate(<any>'model'))
       .to.deep.equal({

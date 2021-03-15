@@ -32,7 +32,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
 
     const server = app.getServer()
     const { query } = createTestClient(<any>server)
-    const { data } = await query({ query: '{ getTestUsers { email } }' })
-    expect(data.getTestUsers).to.deep.equal(users)
+    const { data } = await query({ query: '{ getTestUsers { docs { email } } }' })
+    expect(data.getTestUsers.docs).to.deep.equal(users)
   })
 })
