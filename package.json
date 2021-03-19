@@ -1,6 +1,6 @@
 {
   "name": "slowie",
-  "version": "0.0.3-1",
+  "version": "0.0.3-2",
   "main": "dist/index.js",
   "type": "dist/index.d.ts",
   "files": [
