@@ -31,7 +31,7 @@ export class ModelEnricher<T extends object, Context> {
   async validate(input: Partial<T>, context: Context) {
     for (const key of Object.keys(input)) {
       const validateFunction = _.get(this.modelDefinition.schema[key], 'validate')
-      if (validateFunction) await validateFunction(context, input[key])
+      if (validateFunction) await validateFunction(context, input[key], input)
     }
   }
 

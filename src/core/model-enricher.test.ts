@@ -128,31 +128,21 @@ describe(TestUtils.getTestTitle(__filename), () => {
   })
 
   it('#validate', async () => {
+    const validate = td.function()
     const enricher = new (<any> ModelEnricher)(
       TestUtils.NO_MATTER_VALUE('DbModel'),
       <any> {
         schema: {
           shouldSkip: {},
-          shouldCheck: {
-            validate: ({ role }, value: string) => {
-              if (role !== 'ADMIN') throw new AuthenticationError('ONLY_ADMIN')
-              if (value === 'invalid')throw new UserInputError('INVALID_VALUE')
-            },
-          },
+          shouldCheck: { validate },
         },
       }
     )
 
-    const authError = await enricher.withContext({ role: 'GUEST' })['validate']({ shouldCheck: 'some_value' }).catch(error => error)
-    expect(authError.message).to.equal('ONLY_ADMIN')
-
-    const fieldError = await enricher.withContext({ role: 'ADMIN' })['validate']({ shouldCheck: 'invalid' }).catch(error => error)
-    expect(fieldError.message).to.equal('INVALID_VALUE')
-
-    enricher.withContext({ role: 'ADMIN' })['validate']({
-      shouldSkip: 'nothing',
-      shouldCheck: 'valid',
-    })
+    const context = { role: 'GUEST' }
+    const input = { shouldCheck: 'data_to_check', shouldSkip: 'data_to_skip' }
+    await enricher.withContext(context)['validate'](input)
+    td.verify(validate(context, 'data_to_check', input))
   })
 
   it('#list', async () => {

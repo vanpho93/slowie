@@ -14,14 +14,14 @@ export interface ITransformFunction<Value, Context> {
   (context: Context, value: Value): null | Value | Promise<null | Value>
 }
 
-export interface IValidateFunction<Value, Context> {
-  (context: Context, value: Value): void | Promise<void>
+export interface IValidateFunction<Value, Context, Input> {
+  (context: Context, value: Value, input: Input): void | Promise<void>
 }
 
 export type GraphQLField = graphql.GraphQLFieldConfig<any, any>
 export type GraphQLInputField = graphql.GraphQLInputFieldConfig
 
-export interface IField<Context, Value = any> {
+export interface IField<Context, Value = any, Input = any> {
   graphql: {
     default?: GraphQLField | null
     read?: GraphQLField | null
@@ -33,7 +33,7 @@ export interface IField<Context, Value = any> {
   }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
   transform?: ITransformFunction<Value, Context>
-  validate?: IValidateFunction<Value, Context>
+  validate?: IValidateFunction<Value, Context, Input>
 }
 
 export enum EDefaultApis {
