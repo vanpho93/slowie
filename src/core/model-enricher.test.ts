@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as td from 'testdouble'
 import { expect } from 'chai'
-import { AuthenticationError, UserInputError } from 'apollo-server'
+import { UserInputError } from 'apollo-server'
 import { TestUtils } from '../helpers'
 import { ModelEnricher } from './model-enricher'
 
@@ -98,33 +98,29 @@ describe(TestUtils.getTestTitle(__filename), () => {
   })
 
   it('#transform', () => {
+    const transform = td.function()
+
     const enricher = new (<any> ModelEnricher)(
       TestUtils.NO_MATTER_VALUE('DbModel'),
       <any> {
         schema: {
           shouldRemain: {},
-          shouldChange: {
-            transform: ({ role }, value: string) => {
-              if (role === 'GUEST') return 'abcd'
-              return value
-            },
-          },
+          shouldChange: { transform },
         },
       }
     )
 
-    const value = {
+    const context = { role: 'GUEST' }
+    const obj = {
       shouldRemain: 'constant',
       shouldChange: 'change_to_abcd_if_role_is_guest',
     }
+    td
+      .when(transform(context, obj.shouldChange, obj))
+      .thenReturn('changed')
 
-    expect(
-      enricher.withContext(<any>{ role: 'GUEST' })['transform'](value)
-    ).to.deep.equal({ shouldRemain: 'constant', shouldChange: 'abcd' })
-
-    expect(
-      enricher.withContext(<any>{ role: 'ADMIN' })['transform'](value)
-    ).to.deep.equal(value)
+    expect(enricher.withContext(context)['transform'](obj))
+      .to.deep.equal({ shouldRemain: 'constant', shouldChange: 'changed' })
   })
 
   it('#validate', async () => {

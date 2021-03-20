@@ -10,18 +10,18 @@ import {
 import { Hook } from './hook'
 import { ModelEnricher } from './model-enricher'
 
-export interface ITransformFunction<Value, Context> {
-  (context: Context, value: Value): null | Value | Promise<null | Value>
+export interface ITransformFunction<FieldType, Context, ObjectType> {
+  (context: Context, value: FieldType, obj: ObjectType): null | FieldType | Promise<null | FieldType>
 }
 
-export interface IValidateFunction<Value, Context, Input> {
-  (context: Context, value: Value, input: Input): void | Promise<void>
+export interface IValidateFunction<FieldType, Context, ObjectType> {
+  (context: Context, value: FieldType, obj: ObjectType): void | Promise<void>
 }
 
 export type GraphQLField = graphql.GraphQLFieldConfig<any, any>
 export type GraphQLInputField = graphql.GraphQLInputFieldConfig
 
-export interface IField<Context, Value = any, Input = any> {
+export interface IField<Context, FieldType = any, InputType = any, ObjectType = any> {
   graphql: {
     default?: GraphQLField | null
     read?: GraphQLField | null
@@ -32,8 +32,10 @@ export interface IField<Context, Value = any, Input = any> {
     list?: GraphQLField | null
   }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
-  transform?: ITransformFunction<Value, Context>
-  validate?: IValidateFunction<Value, Context, Input>
+  transformOnCreate?: ITransformFunction<FieldType, Context, ObjectType>
+  transformOnUpdate?: ITransformFunction<FieldType, Context, ObjectType>
+  transform?: ITransformFunction<FieldType, Context, InputType>
+  validate?: IValidateFunction<FieldType, Context, InputType>
 }
 
 export enum EDefaultApis {

@@ -39,7 +39,7 @@ export class ModelEnricher<T extends object, Context> {
     return _.mapValues(value, (fieldValue, key) => {
       const transformField = _.get(this.modelDefinition.schema[key], 'transform')
       if (!transformField) return fieldValue
-      return transformField(context, fieldValue)
+      return transformField(context, fieldValue, value)
     })
   }
 
