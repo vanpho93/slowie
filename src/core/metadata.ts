@@ -14,6 +14,18 @@ export interface ITransformFunction<FieldType, Context, ObjectType> {
   (context: Context, value: FieldType, obj: ObjectType): null | FieldType | Promise<null | FieldType>
 }
 
+export interface ITransformFromField<FieldType, Context> {
+  (tranformInput: { context: Context, value: FieldType }): null | FieldType | Promise<null | FieldType>
+}
+
+export interface ITransformFromFieldWithInput<FieldType, Context, Input = any> extends ITransformFromField<FieldType, Context> {
+  (tranformInput: { context: Context, value: FieldType, input: Input }): null | FieldType | Promise<null | FieldType>
+}
+
+export interface ITransformFromFieldWithInputAndCurrentValue<FieldType, Context, Input = any, CurrentValue = Input> extends ITransformFromFieldWithInput<FieldType, Context, Input> {
+  (tranformInput: { context: Context, value: FieldType, input: Input, currentValut: CurrentValue }): null | FieldType | Promise<null | FieldType>
+}
+
 export interface IValidateFunction<FieldType, Context, ObjectType> {
   (context: Context, value: FieldType, obj: ObjectType): void | Promise<void>
 }
@@ -21,7 +33,7 @@ export interface IValidateFunction<FieldType, Context, ObjectType> {
 export type GraphQLField = graphql.GraphQLFieldConfig<any, any>
 export type GraphQLInputField = graphql.GraphQLInputFieldConfig
 
-export interface IField<Context, FieldType = any, InputType = any, ObjectType = any> {
+export interface IField<Context, FieldType = any, InputType = any, ObjectType = InputType> {
   graphql: {
     default?: GraphQLField | null
     read?: GraphQLField | null
@@ -32,9 +44,16 @@ export interface IField<Context, FieldType = any, InputType = any, ObjectType = 
     list?: GraphQLField | null
   }
   db?: SchemaTypeOpts<any> | Schema | SchemaType
-  transformOnCreate?: ITransformFunction<FieldType, Context, ObjectType>
-  transformOnUpdate?: ITransformFunction<FieldType, Context, ObjectType>
   transform?: ITransformFunction<FieldType, Context, InputType>
+  newTransform?: {
+    default?: ITransformFromField<FieldType, Context>
+    read?: ITransformFromField<FieldType, Context>
+    get?: ITransformFromField<FieldType, Context>
+    list?: ITransformFunction<FieldType, Context, InputType>
+    write?: ITransformFromFieldWithInput<FieldType, Context, InputType>
+    create?: ITransformFunction<FieldType, Context, InputType>
+    update?: ITransformFromFieldWithInputAndCurrentValue<FieldType, Context, InputType, ObjectType>
+  }
   validate?: IValidateFunction<FieldType, Context, InputType>
 }
 
