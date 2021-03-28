@@ -16,8 +16,8 @@ export class ModelEnricher<T extends object, Context> {
     return {
       validate: (input: Partial<T>) => this.validate(input, context),
       transform: (input: T) => this.transform(input, context),
-      create: (input: T) => this.create(input, context),
-      update: (_id: string, input: T) => this.update(_id, input, context),
+      create: (input: Partial<T>) => this.create(input, context),
+      update: (_id: string, input: Partial<T>) => this.update(_id, input, context),
       remove: (_id: string) => this.remove(_id, context),
       getById: (_id: string) => this.getById(_id, context),
       list: () => this.list(context),
@@ -43,7 +43,7 @@ export class ModelEnricher<T extends object, Context> {
     })
   }
 
-  async create(input: T, context: Context) {
+  async create(input: Partial<T>, context: Context) {
     await this.validate(input, context)
     for (const hook of this.dbModel.hook.beforeCreateHooks) {
       await hook(context, input)
@@ -57,7 +57,7 @@ export class ModelEnricher<T extends object, Context> {
     return this.transform(result.toObject(), context)
   }
 
-  async update(_id: string, input: T, context: Context) {
+  async update(_id: string, input: Partial<T>, context: Context) {
     await this.validate(input, context)
     const current = await this.dbModel.findById(_id)
     if (_.isNil(current)) throw new UserInputError(
@@ -68,7 +68,7 @@ export class ModelEnricher<T extends object, Context> {
       await hook(context, input, current)
     }
 
-    const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
+    const result = await this.dbModel.findByIdAndUpdate(_id, input as any, { new: true })
     for (const hook of this.dbModel.hook.afterUpdateHooks) {
       await hook(context, result, input, current)
     }
