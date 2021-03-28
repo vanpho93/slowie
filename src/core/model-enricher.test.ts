@@ -1,7 +1,7 @@
 import * as _ from 'lodash'
 import * as td from 'testdouble'
 import { expect } from 'chai'
-import { AuthenticationError, UserInputError } from 'apollo-server'
+import { UserInputError } from 'apollo-server'
 import { TestUtils } from '../helpers'
 import { ModelEnricher } from './model-enricher'
 
