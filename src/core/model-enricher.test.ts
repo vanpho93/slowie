@@ -78,7 +78,7 @@ describe(TestUtils.getTestTitle(__filename), () => {
       const toBeUpdatedObject = { toObject: td.matchers.anything(), toBeUpdated: true }
       const updatedObject = { toObject: td.matchers.anything(), updated: true }
       td.verify(beforeUpdateHook(context, input, toBeUpdatedObject))
-      td.verify(afterUpdateHook(context, updatedObject, input))
+      td.verify(afterUpdateHook(context, updatedObject, input, toBeUpdatedObject))
     })
 
     it('not found', async () => {

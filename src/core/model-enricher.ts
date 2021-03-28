@@ -70,7 +70,7 @@ export class ModelEnricher<T extends object, Context> {
 
     const result = await this.dbModel.findByIdAndUpdate(_id, input, { new: true })
     for (const hook of this.dbModel.hook.afterUpdateHooks) {
-      await hook(context, result, input)
+      await hook(context, result, input, current)
     }
     return this.transform(result!.toObject(), context)
   }

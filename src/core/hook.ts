@@ -28,7 +28,7 @@ export class Hook<DefaultType, Context> {
     this.beforeUpdateHooks.push(cb)
   }
 
-  afterUpdate<Updated = DefaultType, Input = Partial<Omit<DefaultType, '_id'>>>(cb: (context: Context, updated: Updated, input: Input) => void | Promise<void>) {
+  afterUpdate<Updated = DefaultType, Input = Partial<Omit<DefaultType, '_id'>>>(cb: (context: Context, updated: Updated, input: Input, current: DefaultType) => void | Promise<void>) {
     this.afterUpdateHooks.push(cb)
   }
 }
